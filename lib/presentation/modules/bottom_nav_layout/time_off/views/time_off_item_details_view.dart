@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../../constants/extensions/data_formates.dart';
 import '../../../../styles/colors.dart';
+import '../../../../styles/fonts_theme.dart';
 import '../../../../widget/input_text_form_field.dart';
 import '../view_model/time_off_view_model.dart';
 
@@ -158,10 +159,7 @@ class TimeOffListTileWidget extends StatelessWidget {
           children: [
             Text(
               label,
-              style: const TextStyle(
-                color: AppColors.tDarkGrey,
-                fontSize: 16.0,
-              ),
+              style: labelTextStyle(),
             ),
             if (isRequired)
               Text(
@@ -176,10 +174,7 @@ class TimeOffListTileWidget extends StatelessWidget {
         const SizedBox(height: 5.0),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w400,
-          ),
+          style: timeOffValueTextStyle(),
         ),
         const Divider(),
         const SizedBox(height: 5.0),

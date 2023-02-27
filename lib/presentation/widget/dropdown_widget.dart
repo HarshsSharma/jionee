@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../styles/colors.dart';
+import '../styles/fonts_theme.dart';
 import 'infinty_list_view.dart';
 
 class DropDownWidget extends StatefulWidget {
@@ -166,6 +167,8 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                                       _expanded == false
                                   ? Icons.arrow_drop_down
                                   : Icons.arrow_drop_up,
+                                  color: AppColors.tDarkGrey,
+                                  size: 30.0,
                             ),
                             onPressed: () {
                               _handleButtonPressed();
@@ -245,9 +248,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       children: [
         Text(
           widget.labelText,
-          style: const TextStyle(
-            color: AppColors.tDarkGrey,
-          ),
+          style: labelTextStyle(),
         ),
         if (widget.isRequired)
           Text(

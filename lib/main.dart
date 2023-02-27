@@ -7,7 +7,7 @@ import 'di.dart';
 import 'presentation/modules/bottom_nav_layout/bottom_nav_layout_view_model.dart';
 import 'presentation/modules/bottom_nav_layout/time_off/view_model/time_off_view_model.dart';
 import 'presentation/router/app_router.dart';
-import 'presentation/styles/theme_mode_logice.dart';
+import 'presentation/styles/theme_mode_logic.dart';
 import 'presentation/styles/themes.dart';
 
 Future<void> main() async {
