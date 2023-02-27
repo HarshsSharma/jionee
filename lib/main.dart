@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'data/date_providers/local/cache_helper.dart';
 import 'di.dart';
 import 'presentation/modules/bottom_nav_layout/bottom_nav_layout_view_model.dart';
 import 'presentation/modules/bottom_nav_layout/time_off/view_model/time_off_view_model.dart';
 import 'presentation/router/app_router.dart';
+import 'presentation/styles/theme_mode_logice.dart';
 import 'presentation/styles/themes.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CacheHelper.init();
   setupServiceLocator();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -38,6 +42,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (context) => ModelTheme()..getCurrentTheme(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => BottomNavLayoutViewModel(),
         ),
         ChangeNotifierProvider(
@@ -45,10 +52,16 @@ class MyApp extends StatelessWidget {
           lazy: true,
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: appTheme(),
-        onGenerateRoute: appRouter.onGenerateRoute,
+      child: Consumer<ModelTheme>(
+        builder: (context, ModelTheme themeNotifier, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme(),
+            darkTheme: darkTheme(),
+            themeMode: themeNotifier.themeMode,
+            onGenerateRoute: appRouter.onGenerateRoute,
+          );
+        },
       ),
     );
   }
