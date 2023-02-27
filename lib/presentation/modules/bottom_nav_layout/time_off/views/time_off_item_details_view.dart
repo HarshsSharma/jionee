@@ -1,7 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../../constants/extensions/data_formates.dart';
 
+import '../../../../../constants/extensions/data_formates.dart';
+import '../../../../styles/colors.dart';
+import '../../../../widget/input_text_form_field.dart';
 import '../view_model/time_off_view_model.dart';
 
 class TimeOffItemDetails extends StatelessWidget {
@@ -10,29 +13,91 @@ class TimeOffItemDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TimeOffViewModel data = Provider.of<TimeOffViewModel>(context);
+    Duration duration =
+        data.selectedRequest.endData.difference(data.selectedRequest.startData);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(data.selectedRequest.title),
+        title: const Text('Time Off Requests'),
+        bottom: const PreferredSize(
+          preferredSize: Size(double.infinity, 70.0),
+          child: SizedBox(
+            height: 70.0,
+            width: double.infinity,
+            // Programmer Info
+            child: Card(
+              margin: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.zero),
+              ),
+              child: ListTile(
+                minLeadingWidth: 5.0,
+                leading: CircleAvatar(
+                  radius: 20.0,
+                  backgroundColor: AppColors.primaryColor,
+                ),
+                title: Text('Mohab Mahmoud'),
+                subtitle: Text('Junior progammer'),
+              ),
+            ),
+          ),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RowWithText(
-              title: 'Status',
-              trailingColor: data.selectedRequest.status.color,
-              trailingTitle: data.selectedRequest.status.name,
+            TimeOffListTileWidget(
+              isRequired: true,
+              label: 'Type',
+              value: data.selectedRequest.title,
             ),
-            RowWithText(
-              title: 'Start Date',
-              trailingTitle:
-                  data.selectedRequest.startData.dateFormateToddMMMyy(),
+            const TimeOffListTileWidget(
+              isRequired: true,
+              label: 'Day Part',
+              value: 'Multi Day',
             ),
-            RowWithText(
-              title: 'End Date',
-              trailingTitle:
-                  data.selectedRequest.endData.dateFormateToddMMMyy(),
+            TimeOffListTileWidget(
+              label: 'Dutarion',
+              value:
+                  '${duration.inDays} days (${data.selectedRequest.startData.dateFormateToddMMMyy()} - ${data.selectedRequest.endData.dateFormateToddMMMyy()})',
+            ),
+            const TimeOffListTileWidget(
+              isRequired: true,
+              label: 'Request Message',
+              value: 'Approved by John Smith. Covered by Jane Doe.',
+            ),
+            TimeOffListTileWidget(
+              isRequired: true,
+              label: 'Submitted On',
+              value: data.selectedRequest.postDate.dateFormateToddMMMyy(),
+            ),
+            const InputTextFormFieldWidget(
+              isRequired: false,
+              labelText: 'Enter Comment',
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: SizedBox(
+        height: 70.0,
+        child: Row(
+          children: [
+            Expanded(
+              child: TimeOffActionButton(
+                title: 'Dneny',
+                onTap: () {},
+                color: AppColors.buPurple,
+              ),
+            ),
+            Expanded(
+              child: TimeOffActionButton(
+                title: 'Approve',
+                onTap: () {},
+                color: AppColors.buGreen,
+              ),
             ),
           ],
         ),
@@ -41,39 +106,84 @@ class TimeOffItemDetails extends StatelessWidget {
   }
 }
 
-class RowWithText extends StatelessWidget {
-  const RowWithText({
+// ---------------------------------------------------------------------------------
+class TimeOffActionButton extends StatelessWidget {
+  const TimeOffActionButton({
     Key? key,
     required this.title,
-    required this.trailingTitle,
-    this.trailingColor = Colors.grey,
+    required this.color,
+    required this.onTap,
   }) : super(key: key);
   final String title;
-  final String trailingTitle;
-  final Color trailingColor;
+  final VoidCallback onTap;
+  final Color color;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            '$title:',
-            style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-            ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: color,
+        child: Center(
+          child: Text(
+            title.toUpperCase(),
+            style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                color: Colors.white,
+                fontSize: 17.0,
+                fontWeight: FontWeight.w800),
           ),
-          Text(
-            trailingTitle,
-            style: TextStyle(
-              fontSize: 16.0,
-              color: trailingColor,
-            ),
-          ),
-        ],
+        ),
       ),
+    );
+  }
+}
+
+class TimeOffListTileWidget extends StatelessWidget {
+  const TimeOffListTileWidget({
+    Key? key,
+    required this.label,
+    required this.value,
+    this.isRequired = false,
+  }) : super(key: key);
+
+  final String label;
+  final String value;
+  final bool isRequired;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                color: AppColors.tDarkGrey,
+                fontSize: 16.0,
+              ),
+            ),
+            if (isRequired)
+              Text(
+                '*',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                  fontSize: 16.0,
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 5.0),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        const Divider(),
+        const SizedBox(height: 5.0),
+      ],
     );
   }
 }
