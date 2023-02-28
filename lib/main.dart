@@ -10,7 +10,6 @@ import 'presentation/router/app_router.dart';
 import 'presentation/styles/theme_mode_logic.dart';
 import 'presentation/styles/themes.dart';
 
-
 SharedPreferences? globalSharedPrefs;
 
 Future<void> main() async {
@@ -58,6 +57,12 @@ class MyApp extends StatelessWidget {
       child: Consumer<ModelTheme>(
         builder: (context, ModelTheme themeNotifier, child) {
           return MaterialApp(
+            builder: (context, child) {
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaleFactor: themeNotifier.textScaleFactor),
+                child: child!,
+              );
+            },
             debugShowCheckedModeBanner: false,
             theme: lightTheme(),
             darkTheme: darkTheme(),

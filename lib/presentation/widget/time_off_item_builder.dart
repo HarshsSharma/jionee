@@ -21,37 +21,43 @@ class TimeOffItemBuilder extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  data.title,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${duration.inDays} days (${data.startData.dateFormateToddMMMyy()} - ${data.endData.dateFormateToddMMMyy()})',
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.grey),
-                ),
-              ],
+            Flexible(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data.title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${duration.inDays} days (${data.startData.dateFormateToddMMMyy()} - ${data.endData.dateFormateToddMMMyy()})',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  data.status.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(color: data.status.color),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  data.startData.dateFormateToddMMMyy(),
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.grey),
-                ),
-              ],
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    data.status.name,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(color: data.status.color),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    data.startData.dateFormateToddMMMyy(),
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
