@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../data/date_providers/local/cache_helper.dart';
+import '../../main.dart';
 
 // ignore: constant_identifier_names
 const String THEME_KEY = "theme_key";
@@ -19,14 +18,12 @@ class ModelTheme extends ChangeNotifier {
 
   void changeCurrentTheme(String value) {
     _currentTheme = value;
-    CacheHelper.saveDataSharedPreference(key: THEME_KEY, value: value);
+    globalSharedPrefs!.setString(THEME_KEY, value);
     notifyListeners();
   }
 
-  Future<void> getCurrentTheme() async {
-    _currentTheme =
-        await CacheHelper.getDataFromSharedPreference(key: THEME_KEY) ??
-            'system';
+  void getCurrentTheme() {
+    _currentTheme = globalSharedPrefs!.getString(THEME_KEY) ?? 'system';
     notifyListeners();
   }
 }

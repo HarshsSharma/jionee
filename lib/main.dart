@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'data/date_providers/local/cache_helper.dart';
 import 'di.dart';
 import 'presentation/modules/bottom_nav_layout/bottom_nav_layout_view_model.dart';
 import 'presentation/modules/bottom_nav_layout/time_off/view_model/time_off_view_model.dart';
@@ -10,9 +10,12 @@ import 'presentation/router/app_router.dart';
 import 'presentation/styles/theme_mode_logic.dart';
 import 'presentation/styles/themes.dart';
 
+
+SharedPreferences? globalSharedPrefs;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await CacheHelper.init();
+  globalSharedPrefs = await SharedPreferences.getInstance();
   setupServiceLocator();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
