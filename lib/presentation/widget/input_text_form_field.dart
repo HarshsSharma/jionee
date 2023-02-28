@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../styles/fonts_theme.dart';
 import 'custom_text_field.dart';
 
 class InputTextFormFieldWidget extends StatelessWidget {
@@ -42,7 +41,7 @@ class InputTextFormFieldWidget extends StatelessWidget {
           children: [
             Text(
               labelText,
-              style: labelTextStyle(),
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             if (isRequired)
               Text(

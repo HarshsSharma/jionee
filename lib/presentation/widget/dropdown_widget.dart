@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../styles/colors.dart';
-import '../styles/fonts_theme.dart';
 import 'infinty_list_view.dart';
 
 class DropDownWidget extends StatefulWidget {
@@ -248,7 +247,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       children: [
         Text(
           widget.labelText,
-          style: labelTextStyle(),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         if (widget.isRequired)
           Text(

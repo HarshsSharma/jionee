@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../../constants/extensions/data_formates.dart';
 import '../../../../styles/colors.dart';
-import '../../../../styles/fonts_theme.dart';
 import '../../../../widget/input_text_form_field.dart';
 import '../view_model/time_off_view_model.dart';
 
@@ -20,25 +19,28 @@ class TimeOffItemDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Time Off Requests'),
-        bottom: const PreferredSize(
-          preferredSize: Size(double.infinity, 70.0),
+        bottom: PreferredSize(
+          preferredSize: const Size(double.infinity, 70.0),
           child: SizedBox(
             height: 70.0,
             width: double.infinity,
             // Programmer Info
             child: Card(
               margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.zero),
               ),
               child: ListTile(
                 minLeadingWidth: 5.0,
-                leading: CircleAvatar(
+                leading: const CircleAvatar(
                   radius: 20.0,
                   backgroundColor: AppColors.primaryColor,
                 ),
-                title: Text('Mohab Mahmoud'),
-                subtitle: Text('Junior progammer'),
+                title: Text(
+                  'Mohab Mahmoud',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                subtitle: const Text('Junior progammer'),
               ),
             ),
           ),
@@ -159,7 +161,7 @@ class TimeOffListTileWidget extends StatelessWidget {
           children: [
             Text(
               label,
-              style: labelTextStyle(),
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             if (isRequired)
               Text(
@@ -174,7 +176,7 @@ class TimeOffListTileWidget extends StatelessWidget {
         const SizedBox(height: 5.0),
         Text(
           value,
-          style: timeOffValueTextStyle(),
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
         const Divider(),
         const SizedBox(height: 5.0),
