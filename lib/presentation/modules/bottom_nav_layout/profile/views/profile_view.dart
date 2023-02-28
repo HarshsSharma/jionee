@@ -17,79 +17,105 @@ class _ProfileViewState extends State<ProfileView> {
       appBar: AppBar(),
       body: Consumer<ModelTheme>(
         builder: (_, themeNotifier, __) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                ListTile(
-                  title: Text(
-                    'Theme Mode',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
+          return Column(
+            children: [
+              ListTile(
+                title: Text(
+                  'Change Theme Mode',
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-                RadioListTile<ThemeMode>(
-                  title: const Text('Default'),
-                  value: ThemeMode.system,
-                  groupValue: themeNotifier.themeMode,
-                  onChanged: (value) {
-                    themeNotifier.changeCurrentTheme(value!.name);
-                  },
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            RadioListTile<ThemeMode>(
+                              title: const Text('Default'),
+                              value: ThemeMode.system,
+                              groupValue: themeNotifier.themeMode,
+                              onChanged: (value) {
+                                themeNotifier.changeCurrentTheme(value!.name);
+                              },
+                            ),
+                            RadioListTile<ThemeMode>(
+                              title: const Text('Dark'),
+                              value: ThemeMode.dark,
+                              groupValue: themeNotifier.themeMode,
+                              onChanged: (value) {
+                                themeNotifier.changeCurrentTheme(value!.name);
+                              },
+                            ),
+                            RadioListTile<ThemeMode>(
+                              title: const Text('Light'),
+                              value: ThemeMode.light,
+                              groupValue: themeNotifier.themeMode,
+                              onChanged: (value) {
+                                themeNotifier.changeCurrentTheme(value!.name);
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Font Size',
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-                RadioListTile<ThemeMode>(
-                  title: const Text('Dark'),
-                  value: ThemeMode.dark,
-                  groupValue: themeNotifier.themeMode,
-                  onChanged: (value) {
-                    themeNotifier.changeCurrentTheme(value!.name);
-                  },
-                ),
-                RadioListTile<ThemeMode>(
-                  title: const Text('Light'),
-                  value: ThemeMode.light,
-                  groupValue: themeNotifier.themeMode,
-                  onChanged: (value) {
-                    themeNotifier.changeCurrentTheme(value!.name);
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    'Font Size',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ),
-                RadioListTile<double>(
-                  title: const Text('Small'),
-                  value: 0.8,
-                  groupValue: themeNotifier.textScaleFactor,
-                  onChanged: (_) {
-                    themeNotifier.smallTextScaleFactor();
-                  },
-                ),
-                RadioListTile<double>(
-                  title: const Text('Regular'),
-                  value: 1.0,
-                  groupValue: themeNotifier.textScaleFactor,
-                  onChanged: (_) {
-                    themeNotifier.regularTextScaleFactor();
-                  },
-                ),
-                RadioListTile<double>(
-                  title: const Text('Medium'),
-                  value: 1.2,
-                  groupValue: themeNotifier.textScaleFactor,
-                  onChanged: (_) {
-                    themeNotifier.mediumTextScaleFactor();
-                  },
-                ),
-                RadioListTile<double>(
-                  title: const Text('Large'),
-                  value: 1.5,
-                  groupValue: themeNotifier.textScaleFactor,
-                  onChanged: (_) {
-                    themeNotifier.largeTextScaleFactor();
-                  },
-                ),
-              ],
-            ),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            RadioListTile<double>(
+                              title: const Text('Small'),
+                              value: 0.8,
+                              groupValue: themeNotifier.textScaleFactor,
+                              onChanged: (_) {
+                                themeNotifier.smallTextScaleFactor();
+                              },
+                            ),
+                            RadioListTile<double>(
+                              title: const Text('Regular'),
+                              value: 1.0,
+                              groupValue: themeNotifier.textScaleFactor,
+                              onChanged: (_) {
+                                themeNotifier.regularTextScaleFactor();
+                              },
+                            ),
+                            RadioListTile<double>(
+                              title: const Text('Medium'),
+                              value: 1.2,
+                              groupValue: themeNotifier.textScaleFactor,
+                              onChanged: (_) {
+                                themeNotifier.mediumTextScaleFactor();
+                              },
+                            ),
+                            RadioListTile<double>(
+                              title: const Text('Large'),
+                              value: 1.5,
+                              groupValue: themeNotifier.textScaleFactor,
+                              onChanged: (_) {
+                                themeNotifier.largeTextScaleFactor();
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
           );
         },
       ),

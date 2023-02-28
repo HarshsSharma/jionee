@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../constants/enums/model_theme.dart';
 import '../../main.dart';
 
 // ignore: constant_identifier_names
@@ -24,7 +25,7 @@ class ModelTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  double _textScaleFactor = 1.0;
+  double _textScaleFactor = TextScaleFactorValue.reqular.scaleValue;
   double get textScaleFactor => _textScaleFactor;
 
   void _changeTextScaleFactor(double newValue) {
@@ -33,13 +34,13 @@ class ModelTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  void smallTextScaleFactor() => _changeTextScaleFactor(0.8);
-  void regularTextScaleFactor() => _changeTextScaleFactor(1.0);
-  void mediumTextScaleFactor() => _changeTextScaleFactor(1.2);
-  void largeTextScaleFactor() => _changeTextScaleFactor(1.5);
+  void smallTextScaleFactor() => _changeTextScaleFactor(TextScaleFactorValue.small.scaleValue);
+  void regularTextScaleFactor() => _changeTextScaleFactor(TextScaleFactorValue.reqular.scaleValue);
+  void mediumTextScaleFactor() => _changeTextScaleFactor(TextScaleFactorValue.medium.scaleValue);
+  void largeTextScaleFactor() => _changeTextScaleFactor(TextScaleFactorValue.large.scaleValue);
 
   void getCurrentTheme() {
-    _currentTheme = globalSharedPrefs!.getString(THEME_KEY) ?? 'system';
+    _currentTheme = globalSharedPrefs!.getString(THEME_KEY) ?? ThemeMode.system.name;
     _textScaleFactor = globalSharedPrefs!.getDouble(Font_KEY) ?? 1.0;
     notifyListeners();
   }
