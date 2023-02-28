@@ -3,14 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../../../../styles/theme_mode_logic.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class ProfileView extends StatefulWidget {
+  const ProfileView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

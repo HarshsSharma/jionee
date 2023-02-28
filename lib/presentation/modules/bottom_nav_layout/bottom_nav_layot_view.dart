@@ -23,17 +23,17 @@ class _BottomNavLayoutViewState extends State<BottomNavLayoutView> {
           .maybePop(),
       child: Scaffold(
         body: Stack(
-          children: provider.bottomData
-              .map((e) => _buildOffstageNavigator(e.tabItem))
+          children: provider.bottomData.tabs
+              .map((e) => _buildOffstageNavigator(e.tabItem,e.mainScreen))
               .toList(),
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: provider.currentIndex,
           onTap: (index) {
             provider.changeCurrentIndex(
-                provider.bottomData[index].tabItem, index);
+                provider.bottomData.tabs[index].tabItem, index);
           },
-          items: provider.bottomData
+          items: provider.bottomData.tabs
               .map(
                 (e) => BottomNavigationBarItem(
                   label: '',
@@ -46,13 +46,14 @@ class _BottomNavLayoutViewState extends State<BottomNavLayoutView> {
     );
   }
 
-  Widget _buildOffstageNavigator(TabItem tabItem) {
+  Widget _buildOffstageNavigator(TabItem tabItem,Widget child) {
     final provider = Provider.of<BottomNavLayoutViewModel>(context);
     return Offstage(
       offstage: provider.currentTap != tabItem,
       child: TabNavigator(
         navigatorKey: provider.getNavigatorKey(tabItem),
-        tabItem: tabItem,
+        mainView: child,
+        routes: provider.bottomData.routes,
       ),
     );
   }
