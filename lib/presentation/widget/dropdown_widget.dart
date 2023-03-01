@@ -105,10 +105,16 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                   border: Border.all(
                     color: field.hasError
                         ? Theme.of(context).colorScheme.error
-                        : AppColors.boGrey,
+                        : Theme.of(context).colorScheme.brightness ==
+                                Brightness.dark
+                            ? Colors.grey[700]!
+                            : AppColors.boGrey,
                     width: 2.0,
                   ),
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.brightness ==
+                          Brightness.dark
+                      ? Colors.grey[850]!
+                      : Colors.white,
                 ),
                 child: Row(
                   children: [
@@ -166,8 +172,8 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                                       _expanded == false
                                   ? Icons.arrow_drop_down
                                   : Icons.arrow_drop_up,
-                                  color: AppColors.tDarkGrey,
-                                  size: 30.0,
+                              color: AppColors.tDarkGrey,
+                              size: 30.0,
                             ),
                             onPressed: () {
                               _handleButtonPressed();
@@ -197,7 +203,10 @@ class _DropDownWidgetState extends State<DropDownWidget> {
               if (_focused == ButtonFocusState.focused && _expanded) ...[
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.brightness ==
+                          Brightness.dark
+                      ? Colors.grey[850]!
+                      : Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 15.0,
                     vertical: 4.0,
@@ -223,10 +232,15 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                                   fontSize: 16.0,
                                   color: Colors.grey,
                                 )
-                              : const TextStyle(
+                              : TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                                  color: Theme.of(context)
+                                              .colorScheme
+                                              .brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
                                 ),
                         ),
                       );

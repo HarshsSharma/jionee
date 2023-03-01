@@ -8,6 +8,8 @@ class CustomTextFormField extends FormField<String> {
     super.key,
     this.controller,
     String? initialValue,
+    Color backgroundColor = Colors.white,
+    Color borderColor = AppColors.boGrey,
     FocusNode? focusNode,
     InputDecoration? decoration = const InputDecoration(),
     TextInputType? keyboardType,
@@ -105,10 +107,10 @@ class CustomTextFormField extends FormField<String> {
                       border: Border.all(
                         color: field.errorText != null
                             ? Colors.red
-                            : AppColors.boGrey,
+                            : borderColor,
                         width: 2.0,
                       ),
-                      color: Colors.white,
+                      color: backgroundColor,
                     ),
                     child: TextField(
                       restorationId: restorationId,

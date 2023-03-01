@@ -18,7 +18,9 @@ ThemeData lightTheme() {
   return ThemeData(
     useMaterial3: true,
     colorScheme: _lightColorScheme(),
-    appBarTheme: _appBarTheme(),
+    appBarTheme: _appBarTheme().copyWith(
+      foregroundColor: Colors.white,
+    ),
     bottomNavigationBarTheme: _bottomNavigationBarThemeData(),
     textTheme: TextTheme(
       titleLarge: _titleLarge(Colors.black),
@@ -52,7 +54,7 @@ ColorScheme _lightColorScheme() => const ColorScheme(
       onError: Colors.white,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
-      onSurface: Colors.white,
+      onSurface: Colors.black,
       primary: AppColors.primaryColor,
       secondary: AppColors.primaryColor,
       surface: AppColors.primaryColor,

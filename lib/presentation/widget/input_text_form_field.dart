@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../styles/colors.dart';
 
 import 'custom_text_field.dart';
 
@@ -33,6 +34,13 @@ class InputTextFormFieldWidget extends StatelessWidget {
       textInputAction: textInputAction,
       obscureText: obscureText,
       readOnly: readOnly,
+      backgroundColor:
+          Theme.of(context).colorScheme.brightness == Brightness.dark
+              ? Colors.grey[850]!
+              : Colors.white,
+      borderColor: Theme.of(context).colorScheme.brightness == Brightness.dark
+          ? Colors.grey[700]!
+          : AppColors.boGrey,
       maxLines: maxLines,
       keyboardType: keyboardType,
       validator: validator,

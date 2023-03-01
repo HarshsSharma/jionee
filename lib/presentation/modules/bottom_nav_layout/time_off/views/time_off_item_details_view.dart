@@ -34,13 +34,13 @@ class TimeOffItemDetails extends StatelessWidget {
                 minLeadingWidth: 5.0,
                 leading: const CircleAvatar(
                   radius: 20.0,
-                  backgroundColor: AppColors.primaryColor,
+                  backgroundColor: AppColors.tDarkGrey,
                 ),
                 title: Text(
                   'Mohab Mahmoud',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white),
                 ),
-                subtitle: const Text('Junior progammer'),
+                subtitle: const Text('Junior progammer',style: TextStyle(color: Colors.white),),
               ),
             ),
           ),
