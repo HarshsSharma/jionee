@@ -44,12 +44,14 @@ class TimeOffItemBuilder extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    data.status.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge!
-                        .copyWith(color: data.status.color),
+                  FittedBox(
+                    child: Text(
+                      data.status.name,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(color: data.status.color),
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(

@@ -33,7 +33,10 @@ class _ProfileViewState extends State<ProfileView> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             RadioListTile<ThemeMode>(
-                              title: const Text('Default'),
+                              title: Text(
+                                'Default',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                               value: ThemeMode.system,
                               groupValue: themeNotifier.themeMode,
                               onChanged: (value) {
@@ -41,7 +44,10 @@ class _ProfileViewState extends State<ProfileView> {
                               },
                             ),
                             RadioListTile<ThemeMode>(
-                              title: const Text('Dark'),
+                              title: Text(
+                                'Dark',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                               value: ThemeMode.dark,
                               groupValue: themeNotifier.themeMode,
                               onChanged: (value) {
@@ -49,7 +55,10 @@ class _ProfileViewState extends State<ProfileView> {
                               },
                             ),
                             RadioListTile<ThemeMode>(
-                              title: const Text('Light'),
+                              title: Text(
+                                'Light',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                               value: ThemeMode.light,
                               groupValue: themeNotifier.themeMode,
                               onChanged: (value) {
@@ -77,7 +86,10 @@ class _ProfileViewState extends State<ProfileView> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             RadioListTile<double>(
-                              title: const Text('Small'),
+                              title: Text(
+                                'Small',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                               value: 0.8,
                               groupValue: themeNotifier.textScaleFactor,
                               onChanged: (_) {
@@ -85,7 +97,10 @@ class _ProfileViewState extends State<ProfileView> {
                               },
                             ),
                             RadioListTile<double>(
-                              title: const Text('Regular'),
+                              title: Text(
+                                'Regular',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                               value: 1.0,
                               groupValue: themeNotifier.textScaleFactor,
                               onChanged: (_) {
@@ -93,7 +108,10 @@ class _ProfileViewState extends State<ProfileView> {
                               },
                             ),
                             RadioListTile<double>(
-                              title: const Text('Medium'),
+                              title: Text(
+                                'Medium',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                               value: 1.2,
                               groupValue: themeNotifier.textScaleFactor,
                               onChanged: (_) {
@@ -101,7 +119,10 @@ class _ProfileViewState extends State<ProfileView> {
                               },
                             ),
                             RadioListTile<double>(
-                              title: const Text('Large'),
+                              title: Text(
+                                'Large',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                               value: 1.5,
                               groupValue: themeNotifier.textScaleFactor,
                               onChanged: (_) {
