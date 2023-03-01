@@ -86,173 +86,184 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   @override
   Widget build(BuildContext context) {
     _nodeAttachment.reparent();
-    return FormField(
-      validator: widget.validator,
-      initialValue: widget.multiSelection ? _selectedTitles : _selectedTitle,
-      builder: (field) {
-        return Focus(
-          focusNode: _focusNode,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 70.0,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10.0,
-                  vertical: 5.0,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: field.hasError
-                        ? Theme.of(context).colorScheme.error
-                        : Theme.of(context).colorScheme.brightness ==
-                                Brightness.dark
-                            ? Colors.grey[700]!
-                            : AppColors.boGrey,
-                    width: 2.0,
+    return TapRegion(
+      onTapOutside: (event) {
+       setState(() {
+         _expanded = false;
+       });
+         _focusNode.unfocus();
+      },
+
+      child: FormField(
+        validator: widget.validator,
+        initialValue: widget.multiSelection ? _selectedTitles : _selectedTitle,
+        builder: (field) {
+          return Focus(
+            focusNode: _focusNode,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 70.0,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0,
+                    vertical: 5.0,
                   ),
-                  color: Theme.of(context).colorScheme.brightness ==
-                          Brightness.dark
-                      ? Colors.grey[850]!
-                      : Colors.white,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: _selectedTitle.isNotEmpty ? 3 : 5,
-                      child: widget.multiSelection
-                          ? _selectedTitles.isEmpty
-                              ? _labetWidget(context)
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _labetWidget(context),
-                                    const SizedBox(height: 2),
-                                    _multiSelectionItem(field),
-                                  ],
-                                )
-
-                          //Single Selection Item
-                          : _selectedTitle.isEmpty
-                              ? _labetWidget(context)
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    _labetWidget(context),
-                                    const SizedBox(height: 2),
-                                    _singleSelectionItem(),
-                                  ],
-                                ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: field.hasError
+                          ? Theme.of(context).colorScheme.error
+                          : Theme.of(context).colorScheme.brightness ==
+                                  Brightness.dark
+                              ? Colors.grey[700]!
+                              : AppColors.boGrey,
+                      width: 2.0,
                     ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (_selectedTitle.isNotEmpty)
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedTitle = '';
+                    color: Theme.of(context).colorScheme.brightness ==
+                            Brightness.dark
+                        ? Colors.grey[850]!
+                        : Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: _selectedTitle.isNotEmpty ? 3 : 5,
+                        child: widget.multiSelection
+                            ? _selectedTitles.isEmpty
+                                ? _labetWidget(context)
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _labetWidget(context),
+                                      const SizedBox(height: 2),
+                                      _multiSelectionItem(field),
+                                    ],
+                                  )
 
-                                  field.didChange(_selectedTitle);
-                                });
-                              },
-                              child: const Icon(
-                                Icons.close,
-                                size: 20.0,
+                            //Single Selection Item
+                            : _selectedTitle.isEmpty
+                                ? _labetWidget(context)
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _labetWidget(context),
+                                      const SizedBox(height: 2),
+                                      _singleSelectionItem(),
+                                    ],
+                                  ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (_selectedTitle.isNotEmpty)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedTitle = '';
+
+                                    field.didChange(_selectedTitle);
+                                  });
+                                },
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 20.0,
+                                ),
                               ),
+                            const Spacer(),
+                            IconButton(
+                              icon: Icon(
+                                (_focused == ButtonFocusState.initial ||
+                                            _focused ==
+                                                ButtonFocusState.unFocused) &&
+                                        _expanded == false
+                                    ? Icons.arrow_drop_down
+                                    : Icons.arrow_drop_up,
+                                color: AppColors.tDarkGrey,
+                                size: 30.0,
+                              ),
+                              onPressed: () {
+                                _handleButtonPressed();
+                                field.didChange(widget.multiSelection
+                                    ? _selectedTitles
+                                    : _selectedTitle);
+                              },
                             ),
-                          const Spacer(),
-                          IconButton(
-                            icon: Icon(
-                              (_focused == ButtonFocusState.initial ||
-                                          _focused ==
-                                              ButtonFocusState.unFocused) &&
-                                      _expanded == false
-                                  ? Icons.arrow_drop_down
-                                  : Icons.arrow_drop_up,
-                              color: AppColors.tDarkGrey,
-                              size: 30.0,
-                            ),
-                            onPressed: () {
-                              _handleButtonPressed();
-                              field.didChange(widget.multiSelection
-                                  ? _selectedTitles
-                                  : _selectedTitle);
-                            },
-                          ),
-                        ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (!(_focused == ButtonFocusState.focused && _expanded))
+                  if ((_focused == ButtonFocusState.unFocused ||
+                          _focused == ButtonFocusState.initial) &&
+                      field.hasError) ...[
+                    const SizedBox(height: 5.0),
+                    Text(
+                      field.errorText!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     ),
                   ],
-                ),
-              ),
-              if (!(_focused == ButtonFocusState.focused && _expanded))
-                if ((_focused == ButtonFocusState.unFocused ||
-                        _focused == ButtonFocusState.initial) &&
-                    field.hasError) ...[
-                  const SizedBox(height: 5.0),
-                  Text(
-                    field.errorText!,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+                if (_focused == ButtonFocusState.focused && _expanded) ...[
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    color: Theme.of(context).colorScheme.brightness ==
+                            Brightness.dark
+                        ? Colors.grey[850]!
+                        : Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                      vertical: 4.0,
+                    ),
+                    height: _focused == ButtonFocusState.focused && _expanded
+                        ? 150.0
+                        : 0,
+                    child: InfinityListViewWidget<String>(
+                      focusNode: _focusNode,
+                      data: widget.data,
+                      separatorBuilder: const SizedBox(height: 20.0),
+                      itemBuilder: (ctx, i) {
+                        final title = widget.data[i];
+                        return GestureDetector(
+                          onTap: () {
+                            _handleSelectedEvent(title, field);
+                          },
+                          child: Text(
+                            title,
+                            style: _selectedTitle == title ||
+                                    _selectedTitles.contains(title)
+                                ? const TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.grey,
+                                  )
+                                : TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                                .colorScheme
+                                                .brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                          ),
+                        );
+                      },
+                      onScrollEnd: (nextPage) => widget.onScrollEnd(nextPage),
                     ),
                   ),
                 ],
-              if (_focused == ButtonFocusState.focused && _expanded) ...[
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  color: Theme.of(context).colorScheme.brightness ==
-                          Brightness.dark
-                      ? Colors.grey[850]!
-                      : Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0,
-                    vertical: 4.0,
-                  ),
-                  height: _focused == ButtonFocusState.focused && _expanded
-                      ? 150.0
-                      : 0,
-                  child: InfinityListViewWidget<String>(
-                    focusNode: _focusNode,
-                    data: widget.data,
-                    separatorBuilder: const SizedBox(height: 20.0),
-                    itemBuilder: (ctx, i) {
-                      final title = widget.data[i];
-                      return GestureDetector(
-                        onTap: () {
-                          _handleSelectedEvent(title, field);
-                        },
-                        child: Text(
-                          title,
-                          style: _selectedTitle == title ||
-                                  _selectedTitles.contains(title)
-                              ? const TextStyle(
-                                  fontSize: 16.0,
-                                  color: Colors.grey,
-                                )
-                              : TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context)
-                                              .colorScheme
-                                              .brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),
-                        ),
-                      );
-                    },
-                    onScrollEnd: (nextPage) => widget.onScrollEnd(nextPage),
-                  ),
-                ),
               ],
-            ],
-          ),
-        );
-      },
+            ),
+          );
+        },
+      ),
     );
   }
 
