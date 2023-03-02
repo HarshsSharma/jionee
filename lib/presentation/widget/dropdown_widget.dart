@@ -48,7 +48,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   ButtonFocusState _focused = ButtonFocusState.initial;
   late FocusAttachment _nodeAttachment;
   OverlayEntry? _overlayEntry;
-  GlobalKey globalKey = GlobalKey();
   final LayerLink _layerLink = LayerLink();
 
   String _selectedTitle = '';
@@ -58,9 +57,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   void initState() {
     super.initState();
     OverlayState? overlayState = Overlay.of(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      globalKey;
-    });
     scrollController = widget.scrollController ?? ScrollController();
     _focusNode.addListener(() => _handleFocusChange(overlayState));
     _nodeAttachment = _focusNode.attach(context, onKey: _handleKeyPress);
@@ -118,14 +114,14 @@ class _DropDownWidgetState extends State<DropDownWidget> {
         initialValue: widget.multiSelection ? _selectedTitles : _selectedTitle,
         builder: (field) {
           fieldState = field;
-          return CompositedTransformTarget(
-            link: _layerLink,
-            child: Focus(
-              focusNode: _focusNode,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CompositedTransformTarget(
+                link: _layerLink,
+                child: Focus(
+                  focusNode: _focusNode,
+                  child: Container(
                     height: 70.0,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10.0,
@@ -221,10 +217,14 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                       ],
                     ),
                   ),
-                  if (!(_focused == ButtonFocusState.focused && _expanded))
-                    if ((_focused == ButtonFocusState.unFocused ||
-                            _focused == ButtonFocusState.initial) &&
-                        field.hasError) ...[
+                ),
+              ),
+              if (!_focusNode.hasFocus && field.hasError) ...[
+                Visibility(
+                  visible: (!_focusNode.hasFocus && field.hasError),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       const SizedBox(height: 5.0),
                       Text(
                         field.errorText!,
@@ -233,9 +233,10 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                         ),
                       ),
                     ],
-                ],
-              ),
-            ),
+                  ),
+                ),
+              ],
+            ],
           );
         },
       ),
@@ -251,9 +252,10 @@ class _DropDownWidgetState extends State<DropDownWidget> {
         child: CompositedTransformFollower(
           link: _layerLink,
           showWhenUnlinked: false,
-          offset: Offset(0.0, size.height),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
+          offset: field!.hasError
+              ? Offset(0.0, size.height - 25)
+              : Offset(0.0, size.height),
+          child: Container(
             color: Theme.of(context).colorScheme.brightness == Brightness.dark
                 ? Colors.grey[850]!
                 : Colors.white,
@@ -261,8 +263,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
               horizontal: 15.0,
               vertical: 4.0,
             ),
-            height:
-                _focused == ButtonFocusState.focused && _expanded ? 150.0 : 0,
+            height: 150,
             child: InfinityListViewWidget<String>(
               focusNode: _focusNode,
               data: widget.data,
@@ -271,7 +272,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                 final title = widget.data[i];
                 return GestureDetector(
                   onTap: () {
-                    _handleSelectedEvent(title, field!);
+                    _handleSelectedEvent(title, field);
                   },
                   child: Text(
                     title,
