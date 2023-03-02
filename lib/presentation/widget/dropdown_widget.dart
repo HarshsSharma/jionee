@@ -43,9 +43,13 @@ enum ButtonFocusState {
 class _DropDownWidgetState extends State<DropDownWidget> {
   late ScrollController scrollController;
   final FocusNode _focusNode = FocusNode();
+  late FormFieldState<Object> fieldState;
   bool _expanded = false;
   ButtonFocusState _focused = ButtonFocusState.initial;
   late FocusAttachment _nodeAttachment;
+  OverlayEntry? _overlayEntry;
+  GlobalKey globalKey = GlobalKey();
+  final LayerLink _layerLink = LayerLink();
 
   String _selectedTitle = '';
   final List<String> _selectedTitles = [];
@@ -53,8 +57,12 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   @override
   void initState() {
     super.initState();
+    OverlayState? overlayState = Overlay.of(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      globalKey;
+    });
     scrollController = widget.scrollController ?? ScrollController();
-    _focusNode.addListener(_handleFocusChange);
+    _focusNode.addListener(() => _handleFocusChange(overlayState));
     _nodeAttachment = _focusNode.attach(context, onKey: _handleKeyPress);
   }
 
@@ -69,13 +77,17 @@ class _DropDownWidgetState extends State<DropDownWidget> {
     return KeyEventResult.ignored;
   }
 
-  void _handleFocusChange() {
+  void _handleFocusChange(OverlayState overlayState) {
     debugPrint('${_focusNode.hasFocus}');
     if (_focusNode.hasFocus) {
+      _overlayEntry = _createOverlay(fieldState);
+
+      overlayState.insert(_overlayEntry!);
       setState(() {
         _focused = ButtonFocusState.focused;
       });
     } else {
+      _overlayEntry!.remove();
       setState(() {
         _focused = ButtonFocusState.unFocused;
         _expanded = false;
@@ -87,182 +99,203 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   Widget build(BuildContext context) {
     _nodeAttachment.reparent();
     return TapRegion(
+      /// Through this [onTapOutside] prop I can close the dropdown menu when tapping any where outside it
       onTapOutside: (event) {
-       setState(() {
-         _expanded = false;
-       });
-         _focusNode.unfocus();
+        if (event.position.dy < 82.0 || event.position.dy > 313.0) {
+          setState(() {
+            _expanded = false;
+          });
+          _focusNode.unfocus();
+        }
       },
 
+      /// This [FormField] widget allows me to use the validation of the [Form] like [TextFormFiled]
+      /// (1) I should pass the validator method to it
+      /// (2) In anywhere I am passing a new data I must call field.didChange(pass the data here) to let the form field know
+      /// that the data changed so check if its valid or not
       child: FormField(
-        validator: widget.validator,
+        validator: widget.validator, // (1)
         initialValue: widget.multiSelection ? _selectedTitles : _selectedTitle,
         builder: (field) {
-          return Focus(
-            focusNode: _focusNode,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 70.0,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0,
-                    vertical: 5.0,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: field.hasError
-                          ? Theme.of(context).colorScheme.error
-                          : Theme.of(context).colorScheme.brightness ==
-                                  Brightness.dark
-                              ? Colors.grey[700]!
-                              : AppColors.boGrey,
-                      width: 2.0,
+          fieldState = field;
+          return CompositedTransformTarget(
+            link: _layerLink,
+            child: Focus(
+              focusNode: _focusNode,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 70.0,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 5.0,
                     ),
-                    color: Theme.of(context).colorScheme.brightness ==
-                            Brightness.dark
-                        ? Colors.grey[850]!
-                        : Colors.white,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: _selectedTitle.isNotEmpty ? 3 : 5,
-                        child: widget.multiSelection
-                            ? _selectedTitles.isEmpty
-                                ? _labetWidget(context)
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      _labetWidget(context),
-                                      const SizedBox(height: 2),
-                                      _multiSelectionItem(field),
-                                    ],
-                                  )
-
-                            //Single Selection Item
-                            : _selectedTitle.isEmpty
-                                ? _labetWidget(context)
-                                : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      _labetWidget(context),
-                                      const SizedBox(height: 2),
-                                      _singleSelectionItem(),
-                                    ],
-                                  ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: field.hasError
+                            ? Theme.of(context).colorScheme.error
+                            : Theme.of(context).colorScheme.brightness ==
+                                    Brightness.dark
+                                ? Colors.grey[700]!
+                                : AppColors.boGrey,
+                        width: 2.0,
                       ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            if (_selectedTitle.isNotEmpty)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedTitle = '';
+                      color: Theme.of(context).colorScheme.brightness ==
+                              Brightness.dark
+                          ? Colors.grey[850]!
+                          : Colors.white,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: _selectedTitle.isNotEmpty ? 3 : 5,
+                          child: widget.multiSelection
+                              ? _selectedTitles.isEmpty
+                                  ? _labetWidget(context)
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        _labetWidget(context),
+                                        const SizedBox(height: 2),
+                                        _multiSelectionItem(field),
+                                      ],
+                                    )
 
-                                    field.didChange(_selectedTitle);
-                                  });
-                                },
-                                child: const Icon(
-                                  Icons.close,
-                                  size: 20.0,
+                              //Single Selection Item
+                              : _selectedTitle.isEmpty
+                                  ? _labetWidget(context)
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        _labetWidget(context),
+                                        const SizedBox(height: 2),
+                                        _singleSelectionItem(),
+                                      ],
+                                    ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (_selectedTitle.isNotEmpty)
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedTitle = '';
+
+                                      field.didChange(_selectedTitle); // (2)
+                                    });
+                                  },
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 20.0,
+                                  ),
                                 ),
+                              const Spacer(),
+                              IconButton(
+                                icon: Icon(
+                                  (_focused == ButtonFocusState.initial ||
+                                              _focused ==
+                                                  ButtonFocusState.unFocused) &&
+                                          _expanded == false
+                                      ? Icons.arrow_drop_down
+                                      : Icons.arrow_drop_up,
+                                  color: AppColors.tDarkGrey,
+                                  size: 30.0,
+                                ),
+                                onPressed: () {
+                                  _handleButtonPressed();
+                                  field.didChange(widget.multiSelection
+                                      ? _selectedTitles
+                                      : _selectedTitle);
+                                },
                               ),
-                            const Spacer(),
-                            IconButton(
-                              icon: Icon(
-                                (_focused == ButtonFocusState.initial ||
-                                            _focused ==
-                                                ButtonFocusState.unFocused) &&
-                                        _expanded == false
-                                    ? Icons.arrow_drop_down
-                                    : Icons.arrow_drop_up,
-                                color: AppColors.tDarkGrey,
-                                size: 30.0,
-                              ),
-                              onPressed: () {
-                                _handleButtonPressed();
-                                field.didChange(widget.multiSelection
-                                    ? _selectedTitles
-                                    : _selectedTitle);
-                              },
-                            ),
-                          ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!(_focused == ButtonFocusState.focused && _expanded))
+                    if ((_focused == ButtonFocusState.unFocused ||
+                            _focused == ButtonFocusState.initial) &&
+                        field.hasError) ...[
+                      const SizedBox(height: 5.0),
+                      Text(
+                        field.errorText!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
                         ),
                       ),
                     ],
-                  ),
-                ),
-                if (!(_focused == ButtonFocusState.focused && _expanded))
-                  if ((_focused == ButtonFocusState.unFocused ||
-                          _focused == ButtonFocusState.initial) &&
-                      field.hasError) ...[
-                    const SizedBox(height: 5.0),
-                    Text(
-                      field.errorText!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                  ],
-                if (_focused == ButtonFocusState.focused && _expanded) ...[
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    color: Theme.of(context).colorScheme.brightness ==
-                            Brightness.dark
-                        ? Colors.grey[850]!
-                        : Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0,
-                      vertical: 4.0,
-                    ),
-                    height: _focused == ButtonFocusState.focused && _expanded
-                        ? 150.0
-                        : 0,
-                    child: InfinityListViewWidget<String>(
-                      focusNode: _focusNode,
-                      data: widget.data,
-                      separatorBuilder: const SizedBox(height: 20.0),
-                      itemBuilder: (ctx, i) {
-                        final title = widget.data[i];
-                        return GestureDetector(
-                          onTap: () {
-                            _handleSelectedEvent(title, field);
-                          },
-                          child: Text(
-                            title,
-                            style: _selectedTitle == title ||
-                                    _selectedTitles.contains(title)
-                                ? const TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.grey,
-                                  )
-                                : TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                                .colorScheme
-                                                .brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                          ),
-                        );
-                      },
-                      onScrollEnd: (nextPage) => widget.onScrollEnd(nextPage),
-                    ),
-                  ),
                 ],
-              ],
+              ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  OverlayEntry? _createOverlay([FormFieldState<Object>? field]) {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    var size = renderBox.size;
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        width: size.width,
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: Offset(0.0, size.height),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            color: Theme.of(context).colorScheme.brightness == Brightness.dark
+                ? Colors.grey[850]!
+                : Colors.white,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 4.0,
+            ),
+            height:
+                _focused == ButtonFocusState.focused && _expanded ? 150.0 : 0,
+            child: InfinityListViewWidget<String>(
+              focusNode: _focusNode,
+              data: widget.data,
+              separatorBuilder: const SizedBox(height: 20.0),
+              itemBuilder: (ctx, i) {
+                final title = widget.data[i];
+                return GestureDetector(
+                  onTap: () {
+                    _handleSelectedEvent(title, field!);
+                  },
+                  child: Text(
+                    title,
+                    style: _selectedTitle == title ||
+                            _selectedTitles.contains(title)
+                        ? const TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.grey,
+                          )
+                        : TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.brightness ==
+                                    Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                  ),
+                );
+              },
+              onScrollEnd: (nextPage) => widget.onScrollEnd(nextPage),
+            ),
+          ),
+        ),
       ),
     );
   }
