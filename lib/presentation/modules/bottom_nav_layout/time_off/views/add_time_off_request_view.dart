@@ -78,16 +78,27 @@ class _AddTimeOffRequestViewState extends State<AddTimeOffRequestView> {
                 },
               ),
               const SizedBox(height: 12.0),
-              InputTextFormFieldWidget(
-                controller: viewModel.requestMessageController,
+             DropDownWidget(
+                multiSelection: false,
+                data: const [
+                  'Mohab',
+                  'Mahmoud',
+                  'Mansour',
+                  'Ayman',
+                  'Eslam',
+                  'Ashraf',
+                ],
                 isRequired: true,
-                labelText: 'Request Message',
-                maxLines: null,
-                textInputAction: TextInputAction.newline,
-                keyboardType: TextInputType.multiline,
+                labelText: 'Names',
+                loadData: () async {
+                  return;
+                },
+                onScrollEnd: (_) async {
+                  return;
+                },
                 validator: (value) {
-                  if (value!.isEmpty) {
-                    return ';kgjfsk;gs;lfg';
+                  if (value.isEmpty) {
+                    return 'Please, select item';
                   }
                   return null;
                 },

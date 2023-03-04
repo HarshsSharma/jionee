@@ -8,6 +8,7 @@ TextStyle _getTextStyle({
   FontWeight? fontWeight,
 }) {
   return TextStyle(
+    fontFamily: 'Roboto',
     fontSize: fontSize,
     color: color,
     fontWeight: fontWeight,
@@ -23,9 +24,11 @@ ThemeData lightTheme() {
     ),
     bottomNavigationBarTheme: _bottomNavigationBarThemeData(),
     textTheme: TextTheme(
+      headlineSmall: _headlineSmall(Colors.black),
       titleLarge: _titleLarge(Colors.black),
       titleMedium: _titleMedium(),
-      headlineSmall: _headlineSmall(Colors.black),
+      labelMedium: _labelMedium(AppColors.tDarkBlue),
+      labelSmall: _labelSmall(AppColors.tDarkBlue),
     ),
   );
 }
@@ -41,6 +44,8 @@ ThemeData darkTheme() {
       titleLarge: _titleLarge(Colors.white),
       titleMedium: _titleMedium(),
       headlineSmall: _headlineSmall(Colors.white),
+      labelMedium: _labelMedium(Colors.white),
+      labelSmall: _labelSmall(Colors.white),
     ),
   );
 }
@@ -107,3 +112,9 @@ TextStyle _titleLarge(Color color) => _getTextStyle(
       color: color,
       fontWeight: FontWeight.bold,
     );
+
+TextStyle _labelSmall(Color color) =>
+    _getTextStyle(fontSize: 12.0, color: color);
+
+TextStyle _labelMedium(Color color) =>
+    _getTextStyle(fontSize: 14.0, color: color);
