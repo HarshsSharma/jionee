@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:infinity_scroll_view/core/helpers/dio_helper.dart';
-import 'package:infinity_scroll_view/infinity_scroll_view/view/products_view.dart';
-import 'package:infinity_scroll_view/infinity_scroll_view/view_model/products_provider.dart';
 import 'package:infinity_scroll_view/list_view_selected/controller/selected_list_view_provider.dart';
 import 'package:infinity_scroll_view/list_view_selected/view/list_view_selected.dart';
 import 'package:provider/provider.dart';
