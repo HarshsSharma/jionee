@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../router/tab_navigator.dart';
+import '../../../../widget/app_drawer.dart';
 import '../../../../widget/infinty_list_view.dart';
 import '../../../../widget/time_off_item_builder.dart';
 import '../models/time_off_model.dart';
@@ -15,7 +16,7 @@ class TimeOff extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Time Off'),
       ),
-      endDrawer: const Drawer(),
+      endDrawer: const AppDrawer(),
       body: Consumer<TimeOffViewModel>(
         builder: (_, provider, __) {
           return InfinityListViewWidget<TimeOffModel>(
