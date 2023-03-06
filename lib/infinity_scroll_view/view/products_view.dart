@@ -10,14 +10,10 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  late ScrollController _controller;
-  int skip = 0;
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
-    context.read<ProductsProvider>().getProducts(skip);
-    context.read<ProductsProvider>().infinityScroll(_controller, skip);
+    context.read<ProductsProvider>().infinityScrollWithProducts();
   }
 
   @override
@@ -32,7 +28,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           children: [
             Expanded(
               child: ListView.builder(
-                controller: _controller,
+                controller: context.read<ProductsProvider>().scrollController,
                 itemCount: context.watch<ProductsProvider>().products.length,
                 itemBuilder: (context, index) => ListTile(
                     title: Text(context
