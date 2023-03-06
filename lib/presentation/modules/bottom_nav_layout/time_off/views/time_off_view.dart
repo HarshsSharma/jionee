@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../router/tab_navigator.dart';
-import '../../../../widget/app_drawer.dart';
-import '../../../../widget/infinty_list_view.dart';
-import '../../../../widget/time_off_item_builder.dart';
+import '../../../../../common/widget/app_drawer.dart';
+import '../../../../../common/widget/infinty_list_view.dart';
+import '../../../../../common/widget/time_off_item_builder.dart';
 import '../models/time_off_model.dart';
 import '../view_model/time_off_view_model.dart';
 

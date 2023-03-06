@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:jionee/common/extensions/data_formates.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../constants/extensions/data_formates.dart';
-import '../../../../styles/colors.dart';
-import '../../../../widget/input_text_form_field.dart';
+import '../../../../../common/styles/colors.dart';
+import '../../../../../common/widget/input_text_form_field.dart';
 import '../view_model/time_off_view_model.dart';
 
 class TimeOffItemDetails extends StatelessWidget {
@@ -38,9 +38,15 @@ class TimeOffItemDetails extends StatelessWidget {
                 ),
                 title: Text(
                   'Mohab Mahmoud',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.white),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: Colors.white),
                 ),
-                subtitle: const Text('Junior progammer',style: TextStyle(color: Colors.white),),
+                subtitle: const Text(
+                  'Junior progammer',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ),

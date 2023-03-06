@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../widget/dropdown_widget.dart';
-import '../../../../widget/input_text_form_field.dart';
+import '../../../../../common/widget/dropdown_widget.dart';
+import '../../../../../common/widget/input_text_form_field.dart';
 import '../view_model/time_off_view_model.dart';
 
 class AddTimeOffRequestView extends StatefulWidget {
@@ -78,7 +78,7 @@ class _AddTimeOffRequestViewState extends State<AddTimeOffRequestView> {
                 },
               ),
               const SizedBox(height: 12.0),
-             DropDownWidget(
+              DropDownWidget(
                 multiSelection: false,
                 data: const [
                   'Mohab',

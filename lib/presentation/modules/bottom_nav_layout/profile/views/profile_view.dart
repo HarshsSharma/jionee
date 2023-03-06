@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../styles/theme_mode_logic.dart';
+import '../../../../../common/styles/theme_mode_logic.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});

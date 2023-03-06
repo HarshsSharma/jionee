@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jionee/common/enums/tab_item.dart';
 import 'package:provider/provider.dart';
 
-import '../../../constants/enums/tab_item.dart';
 import '../../router/tab_navigator.dart';
 import 'bottom_nav_layout_view_model.dart';
 
@@ -24,7 +24,7 @@ class _BottomNavLayoutViewState extends State<BottomNavLayoutView> {
       child: Scaffold(
         body: Stack(
           children: provider.bottomData.tabs
-              .map((e) => _buildOffstageNavigator(e.tabItem,e.mainScreen))
+              .map((e) => _buildOffstageNavigator(e.tabItem, e.mainScreen))
               .toList(),
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -46,7 +46,7 @@ class _BottomNavLayoutViewState extends State<BottomNavLayoutView> {
     );
   }
 
-  Widget _buildOffstageNavigator(TabItem tabItem,Widget child) {
+  Widget _buildOffstageNavigator(TabItem tabItem, Widget child) {
     final provider = Provider.of<BottomNavLayoutViewModel>(context);
     return Offstage(
       offstage: provider.currentTap != tabItem,

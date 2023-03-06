@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
-import '../../../constants/enums/tab_item.dart';
+import 'package:jionee/common/enums/tab_item.dart';
 
 class BottomNavModel {
   final TabItem tabItem;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../router/tab_navigator.dart';
+import '../../presentation/router/tab_navigator.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -92,14 +92,14 @@ class DrawerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Ink(
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
-        topRight: Radius.circular(40.0),
-        bottomRight: Radius.circular(40.0),
-      ),
-      color: isSelected
-          ? const Color(0xffE3EAFF).withOpacity(0.3)
-          : Colors.transparent,
+          topRight: Radius.circular(40.0),
+          bottomRight: Radius.circular(40.0),
+        ),
+        color: isSelected
+            ? const Color(0xffE3EAFF).withOpacity(0.3)
+            : Colors.transparent,
       ),
       child: ListTile(
         selected: true,

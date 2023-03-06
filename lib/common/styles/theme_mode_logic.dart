@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../constants/enums/model_theme.dart';
+import 'package:jionee/common/enums/model_theme.dart';
 import '../../main.dart';
 
 // ignore: constant_identifier_names
@@ -34,13 +34,18 @@ class ModelTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  void smallTextScaleFactor() => _changeTextScaleFactor(TextScaleFactorValue.small.scaleValue);
-  void regularTextScaleFactor() => _changeTextScaleFactor(TextScaleFactorValue.reqular.scaleValue);
-  void mediumTextScaleFactor() => _changeTextScaleFactor(TextScaleFactorValue.medium.scaleValue);
-  void largeTextScaleFactor() => _changeTextScaleFactor(TextScaleFactorValue.large.scaleValue);
+  void smallTextScaleFactor() =>
+      _changeTextScaleFactor(TextScaleFactorValue.small.scaleValue);
+  void regularTextScaleFactor() =>
+      _changeTextScaleFactor(TextScaleFactorValue.reqular.scaleValue);
+  void mediumTextScaleFactor() =>
+      _changeTextScaleFactor(TextScaleFactorValue.medium.scaleValue);
+  void largeTextScaleFactor() =>
+      _changeTextScaleFactor(TextScaleFactorValue.large.scaleValue);
 
   void getCurrentTheme() {
-    _currentTheme = globalSharedPrefs!.getString(THEME_KEY) ?? ThemeMode.system.name;
+    _currentTheme =
+        globalSharedPrefs!.getString(THEME_KEY) ?? ThemeMode.system.name;
     _textScaleFactor = globalSharedPrefs!.getDouble(Font_KEY) ?? 1.0;
     notifyListeners();
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jionee/common/enums/tab_item.dart';
 
-import '../../../constants/enums/tab_item.dart';
 import '../../router/tab_navigator.dart';
 import '../page_2.dart';
 import '../page_three.dart';

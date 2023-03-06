@@ -105,9 +105,8 @@ class CustomTextFormField extends FormField<String> {
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: field.errorText != null
-                            ? Colors.red
-                            : borderColor,
+                        color:
+                            field.errorText != null ? Colors.red : borderColor,
                         width: 2.0,
                       ),
                       color: backgroundColor,

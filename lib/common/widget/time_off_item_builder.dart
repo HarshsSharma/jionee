@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../constants/extensions/data_formates.dart';
+import 'package:jionee/common/extensions/data_formates.dart';
 
-import '../modules/bottom_nav_layout/time_off/models/time_off_model.dart';
+import '../../presentation/modules/bottom_nav_layout/time_off/models/time_off_model.dart';
 
 class TimeOffItemBuilder extends StatelessWidget {
   const TimeOffItemBuilder({
@@ -35,7 +35,10 @@ class TimeOffItemBuilder extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     '${duration.inDays} days (${data.startData.dateFormateToddMMMyy()} - ${data.endData.dateFormateToddMMMyy()})',
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.grey),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(color: Colors.grey),
                   ),
                 ],
               ),
@@ -56,7 +59,10 @@ class TimeOffItemBuilder extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     data.startData.dateFormateToddMMMyy(),
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.grey),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(color: Colors.grey),
                   ),
                 ],
               ),
