@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:jionee/common/enums/tab_item.dart';
 
 import '../../router/tab_navigator.dart';
-import '../page_2.dart';
-import '../page_three.dart';
 import 'bottom_nav_model.dart';
 import 'category/category_view.dart';
 import 'profile/views/profile_view.dart';
@@ -42,8 +40,6 @@ class BottomNavLayoutViewModel with ChangeNotifier {
       ),
     ],
     routes: {
-      TabNavigatorRoutes.page2: (context) => const PageTwo(),
-      TabNavigatorRoutes.page3: (context) => const PageThree(),
       TabNavigatorRoutes.timeOffItemDetails: (context) =>
           const TimeOffItemDetails(),
       TabNavigatorRoutes.addTimeOffRequest: (context) =>

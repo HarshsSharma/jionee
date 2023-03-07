@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../router/tab_navigator.dart';
 
 class CategoryView extends StatelessWidget {
   const CategoryView({super.key});
@@ -9,12 +8,8 @@ class CategoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: TextButton(
-          onPressed: () =>
-              Navigator.pushNamed(context, TabNavigatorRoutes.page2),
-          child: const Text('Navigate to page2'),
-        ),
+      body: const Center(
+        child: Text('Category'),
       ),
     );
   }
