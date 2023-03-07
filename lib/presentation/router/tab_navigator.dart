@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 class TabNavigatorRoutes {
   static const String root = '/';
   static const String itemDetails = '/ItemDetails';
-  static const String page2 = '/page2';
-  static const String page3 = '/page3';
   static const String timeOffItemDetails = '/Time-Off-Item-Details';
   static const String addTimeOffRequest = '/Add-Time-Off-Item-Requests';
 }
