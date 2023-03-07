@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../common/widget/scaffold_drawer.dart';
 import '../../../../router/tab_navigator.dart';
-import '../../../../../common/widget/app_drawer.dart';
 import '../../../../../common/widget/infinty_list_view.dart';
 import '../../../../../common/widget/time_off_item_builder.dart';
 import '../models/time_off_model.dart';
@@ -12,11 +12,10 @@ class TimeOff extends StatelessWidget {
   const TimeOff({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ScaffoldDrawer(
       appBar: AppBar(
         title: const Text('Time Off'),
       ),
-      endDrawer: const AppDrawer(),
       body: Consumer<TimeOffViewModel>(
         builder: (_, provider, __) {
           return InfinityListViewWidget<TimeOffModel>(
