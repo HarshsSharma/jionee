@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jionee/list_view_selected/controller/selected_list_view_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'di.dart';
+import 'list_view_selected/view/list_view_selected.dart';
 import 'presentation/modules/bottom_nav_layout/bottom_nav_layout_view_model.dart';
 import 'presentation/modules/bottom_nav_layout/time_off/view_model/time_off_view_model.dart';
 import 'presentation/router/app_router.dart';
@@ -68,7 +70,11 @@ class MyApp extends StatelessWidget {
             theme: lightTheme(),
             darkTheme: darkTheme(),
             themeMode: themeNotifier.themeMode,
-            onGenerateRoute: appRouter.onGenerateRoute,
+            //onGenerateRoute: appRouter.onGenerateRoute,
+            home: ChangeNotifierProvider(
+              create: (context) => SelectedListViewProvider(),
+              child: const ListViewSelected(),
+            ),
           );
         },
       ),
