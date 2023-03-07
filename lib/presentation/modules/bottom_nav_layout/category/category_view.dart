@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../no_internet/view/no_internet_view.dart';
 
 class CategoryView extends StatelessWidget {
   const CategoryView({super.key});
@@ -8,8 +9,10 @@ class CategoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const Center(
-        child: Text('Category'),
+      body: Center(
+        child: NoInternetView(
+          retryCallback: () {},
+        ),
       ),
     );
   }
