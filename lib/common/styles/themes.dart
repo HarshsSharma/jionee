@@ -23,6 +23,7 @@ ThemeData lightTheme() {
       foregroundColor: Colors.white,
     ),
     bottomNavigationBarTheme: _bottomNavigationBarThemeData(),
+    popupMenuTheme: _popupMenuThemeData(textColors: Colors.black),
     textTheme: TextTheme(
       headlineSmall: _headlineSmall(Colors.black),
       titleLarge: _titleLarge(Colors.black),
@@ -40,6 +41,10 @@ ThemeData darkTheme() {
     appBarTheme: _appBarTheme(),
     bottomNavigationBarTheme: _bottomNavigationBarThemeData(),
     dialogBackgroundColor: Colors.grey[700],
+    popupMenuTheme: _popupMenuThemeData(
+      color: Colors.grey[700]!,
+      textColors: Colors.white,
+    ),
     textTheme: TextTheme(
       titleLarge: _titleLarge(Colors.white),
       titleMedium: _titleMedium(),
@@ -93,6 +98,20 @@ BottomNavigationBarThemeData _bottomNavigationBarThemeData() =>
 // App bar Theme Mode is the sama for both light and dark themes
 AppBarTheme _appBarTheme() => const AppBarTheme(
       elevation: 0.0,
+    );
+
+// Popup menu Theme
+
+PopupMenuThemeData _popupMenuThemeData({
+  Color color = Colors.white,
+  required Color textColors,
+}) =>
+    PopupMenuThemeData(
+      color: color,
+      textStyle: _getTextStyle(
+        fontSize: 16.0,
+        color: textColors,
+      ),
     );
 
 // Text Style for themes
