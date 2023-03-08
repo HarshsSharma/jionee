@@ -59,7 +59,6 @@ class _LockViewState extends State<LockView> {
                 }
               },
               onSubmit: () {
-                print(_controller.text);
                 if (lockPass! == _controller.text) {
                   Navigator.pushReplacementNamed(
                     context,
