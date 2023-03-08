@@ -13,6 +13,7 @@ class LockView extends StatefulWidget {
 }
 
 class _LockViewState extends State<LockView> {
+  final String _title = 'Enter Password';
   final TextEditingController _controller = TextEditingController();
   String? lockPass;
   @override
@@ -35,7 +36,7 @@ class _LockViewState extends State<LockView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Enter Password',
+              _title,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 10.0),
@@ -50,41 +51,45 @@ class _LockViewState extends State<LockView> {
             const SizedBox(height: 10.0),
             NumPad(
               controller: _controller,
-              delete: () {
-                if (_controller.text.isNotEmpty) {
-                  _controller.text = _controller.text.substring(
-                    0,
-                    _controller.text.length - 1,
-                  );
-                }
-              },
-              onSubmit: () {
-                if (lockPass! == _controller.text) {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    AppRouterNames.bottomNavLayout,
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                      content: Text(
-                        'Incorrect password',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(color: Colors.white),
-                      ),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                }
-              },
+              delete: _delete,
+              onSubmit: _onSubmit,
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _delete() {
+    if (_controller.text.isNotEmpty) {
+      _controller.text = _controller.text.substring(
+        0,
+        _controller.text.length - 1,
+      );
+    }
+  }
+
+  void _onSubmit() {
+    if (lockPass! == _controller.text) {
+      Navigator.pushReplacementNamed(
+        context,
+        AppRouterNames.bottomNavLayout,
+      );
+    } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(
+            'Incorrect password',
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: Colors.white),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }

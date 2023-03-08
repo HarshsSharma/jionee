@@ -29,6 +29,7 @@ class NoInternetView extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           title,
+          textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headlineLarge,
         ),
         TextButton.icon(

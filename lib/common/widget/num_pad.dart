@@ -22,6 +22,7 @@ class NumPad extends StatelessWidget {
         Theme.of(context).colorScheme.brightness == Brightness.dark
             ? Colors.white
             : AppColors.primaryColor;
+    double iconSize = 35.0;
     return Container(
       margin: const EdgeInsets.only(left: 30, right: 30),
       child: Column(
@@ -83,7 +84,7 @@ class NumPad extends StatelessWidget {
                   Icons.backspace,
                   color: iconColor,
                 ),
-                iconSize: 35.0,
+                iconSize: iconSize,
               ),
               NumberButton(
                 number: 0,
@@ -97,7 +98,7 @@ class NumPad extends StatelessWidget {
                   Icons.done_rounded,
                   color: iconColor,
                 ),
-                iconSize: 35.0,
+                iconSize: iconSize,
               ),
             ],
           ),

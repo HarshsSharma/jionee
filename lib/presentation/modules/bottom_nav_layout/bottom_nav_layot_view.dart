@@ -24,14 +24,24 @@ class _BottomNavLayoutViewState extends State<BottomNavLayoutView> {
       child: Scaffold(
         body: Stack(
           children: provider.bottomData.tabs
-              .map((e) => _buildOffstageNavigator(e.tabItem, e.mainScreen))
+              .map(
+                (e) => _buildOffstageNavigator(
+                  e.tabItem,
+                  e.mainScreen,
+                  provider.currentTap,
+                  provider.getNavigatorKey(e.tabItem),
+                  provider.bottomData.routes,
+                ),
+              )
               .toList(),
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: provider.currentIndex,
           onTap: (index) {
             provider.changeCurrentIndex(
-                provider.bottomData.tabs[index].tabItem, index);
+              provider.bottomData.tabs[index].tabItem,
+              index,
+            );
           },
           items: provider.bottomData.tabs
               .map(
@@ -46,14 +56,19 @@ class _BottomNavLayoutViewState extends State<BottomNavLayoutView> {
     );
   }
 
-  Widget _buildOffstageNavigator(TabItem tabItem, Widget child) {
-    final provider = Provider.of<BottomNavLayoutViewModel>(context);
+  Widget _buildOffstageNavigator(
+    TabItem tabItem,
+    Widget child,
+    TabItem currentTap,
+    GlobalKey<NavigatorState> globalKey,
+    Map<String, Widget Function(BuildContext)> routes,
+  ) {
     return Offstage(
-      offstage: provider.currentTap != tabItem,
+      offstage: currentTap != tabItem,
       child: TabNavigator(
-        navigatorKey: provider.getNavigatorKey(tabItem),
+        navigatorKey: globalKey,
         mainView: child,
-        routes: provider.bottomData.routes,
+        routes: routes,
       ),
     );
   }
