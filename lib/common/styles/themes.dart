@@ -70,7 +70,7 @@ ColorScheme _lightColorScheme() => const ColorScheme(
       surface: AppColors.primaryColor,
     );
 
-ColorScheme _darkColorScheme() => ColorScheme(
+ColorScheme _darkColorScheme() => const ColorScheme(
       background: Colors.black,
       brightness: Brightness.dark,
       surfaceVariant: Colors.red,
@@ -80,8 +80,8 @@ ColorScheme _darkColorScheme() => ColorScheme(
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: Colors.white,
-      primary: Colors.grey[850]!,
-      secondary: Colors.grey[850]!,
+      primary: AppColors.darkModePrimaryColor,
+      secondary: AppColors.darkModePrimaryColor,
       surface: Colors.black,
     );
 

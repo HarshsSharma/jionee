@@ -14,6 +14,12 @@ class LockView extends StatefulWidget {
 
 class _LockViewState extends State<LockView> {
   final TextEditingController _controller = TextEditingController();
+  String? lockPass;
+  @override
+  void initState() {
+    lockPass = globalSharedPrefs!.getString(lockScreenKey);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -37,19 +43,23 @@ class _LockViewState extends State<LockView> {
               controller: _controller,
               obscureText: true,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 25.0),
+              style: const TextStyle(fontSize: 30.0),
+              readOnly: true,
+              decoration: const InputDecoration(border: InputBorder.none),
             ),
             const SizedBox(height: 10.0),
             NumPad(
               controller: _controller,
               delete: () {
-                _controller.text = _controller.text.substring(
-                  0,
-                  _controller.text.length - 1,
-                );
+                if (_controller.text.isNotEmpty) {
+                  _controller.text = _controller.text.substring(
+                    0,
+                    _controller.text.length - 1,
+                  );
+                }
               },
               onSubmit: () {
-                String? lockPass = globalSharedPrefs!.getString(lockScreenKey);
+                print(_controller.text);
                 if (lockPass! == _controller.text) {
                   Navigator.pushReplacementNamed(
                     context,
@@ -60,7 +70,13 @@ class _LockViewState extends State<LockView> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Theme.of(context).colorScheme.error,
-                      content: const Text('Incorrect password'),
+                      content: Text(
+                        'Incorrect password',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge!
+                            .copyWith(color: Colors.white),
+                      ),
                       duration: const Duration(seconds: 2),
                     ),
                   );

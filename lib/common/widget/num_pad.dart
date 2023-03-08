@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../styles/colors.dart';
 
 class NumPad extends StatelessWidget {
   final double buttonSize;
-  final Color buttonColor;
-  final Color iconColor;
   final TextEditingController controller;
   final Function delete;
   final Function onSubmit;
@@ -12,8 +11,6 @@ class NumPad extends StatelessWidget {
   const NumPad({
     Key? key,
     this.buttonSize = 70,
-    this.buttonColor = Colors.indigo,
-    this.iconColor = Colors.amber,
     required this.delete,
     required this.onSubmit,
     required this.controller,
@@ -21,6 +18,10 @@ class NumPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color iconColor =
+        Theme.of(context).colorScheme.brightness == Brightness.dark
+            ? Colors.white
+            : AppColors.primaryColor;
     return Container(
       margin: const EdgeInsets.only(left: 30, right: 30),
       child: Column(
@@ -36,7 +37,6 @@ class NumPad extends StatelessWidget {
                 return NumberButton(
                   number: index + 1,
                   size: buttonSize,
-                  color: buttonColor,
                   controller: controller,
                 );
               },
@@ -52,7 +52,6 @@ class NumPad extends StatelessWidget {
                 return NumberButton(
                   number: z + index + 1,
                   size: buttonSize,
-                  color: buttonColor,
                   controller: controller,
                 );
               },
@@ -68,7 +67,6 @@ class NumPad extends StatelessWidget {
                 return NumberButton(
                   number: z + index + 1,
                   size: buttonSize,
-                  color: buttonColor,
                   controller: controller,
                 );
               },
@@ -85,12 +83,11 @@ class NumPad extends StatelessWidget {
                   Icons.backspace,
                   color: iconColor,
                 ),
-                iconSize: buttonSize,
+                iconSize: 35.0,
               ),
               NumberButton(
                 number: 0,
                 size: buttonSize,
-                color: buttonColor,
                 controller: controller,
               ),
               // this button is used to submit the entered value
@@ -100,7 +97,7 @@ class NumPad extends StatelessWidget {
                   Icons.done_rounded,
                   color: iconColor,
                 ),
-                iconSize: buttonSize,
+                iconSize: 35.0,
               ),
             ],
           ),
@@ -115,19 +112,20 @@ class NumPad extends StatelessWidget {
 class NumberButton extends StatelessWidget {
   final int number;
   final double size;
-  final Color color;
   final TextEditingController controller;
 
   const NumberButton({
     Key? key,
     required this.number,
     required this.size,
-    required this.color,
     required this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Color color = Theme.of(context).colorScheme.brightness == Brightness.dark
+        ? AppColors.darkModePrimaryColor
+        : AppColors.primaryColor;
     return SizedBox(
       width: size,
       height: size,

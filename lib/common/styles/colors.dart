@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 class AppColors {
   static const Color primaryColor = Color(0xFF161652);
+  static const Color darkModePrimaryColor = Color(0xFF303030);
   static const Color scaffoldBackgroundColor = Color(0xFFF6F6F6);
 
   // Border color
