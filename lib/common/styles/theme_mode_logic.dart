@@ -28,20 +28,12 @@ class ModelTheme extends ChangeNotifier {
   double _textScaleFactor = TextScaleFactorValue.reqular.scaleValue;
   double get textScaleFactor => _textScaleFactor;
 
-  void _changeTextScaleFactor(double newValue) {
+  void changeTextScaleFactor(double newValue) {
     _textScaleFactor = newValue;
     globalSharedPrefs!.setDouble(Font_KEY, newValue);
     notifyListeners();
   }
 
-  void smallTextScaleFactor() =>
-      _changeTextScaleFactor(TextScaleFactorValue.small.scaleValue);
-  void regularTextScaleFactor() =>
-      _changeTextScaleFactor(TextScaleFactorValue.reqular.scaleValue);
-  void mediumTextScaleFactor() =>
-      _changeTextScaleFactor(TextScaleFactorValue.medium.scaleValue);
-  void largeTextScaleFactor() =>
-      _changeTextScaleFactor(TextScaleFactorValue.large.scaleValue);
 
   void getCurrentTheme() {
     _currentTheme =

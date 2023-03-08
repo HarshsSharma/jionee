@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../common/enums/model_theme.dart';
 import '../../../../../common/styles/theme_mode_logic.dart';
 
 class ProfileView extends StatefulWidget {
@@ -31,41 +32,27 @@ class _ProfileViewState extends State<ProfileView> {
                       return Dialog(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
-                            RadioListTile<ThemeMode>(
-                              title: Text(
-                                'Default',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              value: ThemeMode.system,
-                              groupValue: themeNotifier.themeMode,
-                              onChanged: (value) {
-                                themeNotifier.changeCurrentTheme(value!.name);
-                              },
-                            ),
-                            RadioListTile<ThemeMode>(
-                              title: Text(
-                                'Dark',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              value: ThemeMode.dark,
-                              groupValue: themeNotifier.themeMode,
-                              onChanged: (value) {
-                                themeNotifier.changeCurrentTheme(value!.name);
-                              },
-                            ),
-                            RadioListTile<ThemeMode>(
-                              title: Text(
-                                'Light',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              value: ThemeMode.light,
-                              groupValue: themeNotifier.themeMode,
-                              onChanged: (value) {
-                                themeNotifier.changeCurrentTheme(value!.name);
-                              },
-                            ),
-                          ],
+                          children: ThemeMode.values
+                              .map(
+                                (e) => RadioListTile<ThemeMode>(
+                                  title: Text(
+                                    e == ThemeMode.system
+                                        ? 'Default'
+                                        : e == ThemeMode.dark
+                                            ? 'Dark'
+                                            : 'Light',
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                  ),
+                                  value: e,
+                                  groupValue: themeNotifier.themeMode,
+                                  onChanged: (value) {
+                                    themeNotifier
+                                        .changeCurrentTheme(value!.name);
+                                  },
+                                ),
+                              )
+                              .toList(),
                         ),
                       );
                     },
@@ -84,52 +71,22 @@ class _ProfileViewState extends State<ProfileView> {
                       return Dialog(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
-                            RadioListTile<double>(
-                              title: Text(
-                                'Small',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              value: 0.8,
-                              groupValue: themeNotifier.textScaleFactor,
-                              onChanged: (_) {
-                                themeNotifier.smallTextScaleFactor();
-                              },
-                            ),
-                            RadioListTile<double>(
-                              title: Text(
-                                'Regular',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              value: 1.0,
-                              groupValue: themeNotifier.textScaleFactor,
-                              onChanged: (_) {
-                                themeNotifier.regularTextScaleFactor();
-                              },
-                            ),
-                            RadioListTile<double>(
-                              title: Text(
-                                'Medium',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              value: 1.2,
-                              groupValue: themeNotifier.textScaleFactor,
-                              onChanged: (_) {
-                                themeNotifier.mediumTextScaleFactor();
-                              },
-                            ),
-                            RadioListTile<double>(
-                              title: Text(
-                                'Large',
-                                style: Theme.of(context).textTheme.titleLarge,
-                              ),
-                              value: 1.5,
-                              groupValue: themeNotifier.textScaleFactor,
-                              onChanged: (_) {
-                                themeNotifier.largeTextScaleFactor();
-                              },
-                            ),
-                          ],
+                          children: TextScaleFactorValue.values
+                              .map(
+                                (e) => RadioListTile<double>(
+                                  title: Text(
+                                    e.type,
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                  ),
+                                  value: e.scaleValue,
+                                  groupValue: themeNotifier.textScaleFactor,
+                                  onChanged: (value) {
+                                    themeNotifier.changeTextScaleFactor(value!);
+                                  },
+                                ),
+                              )
+                              .toList(),
                         ),
                       );
                     },
