@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:jionee/common/enums/tab_item.dart';
 
 import '../../router/tab_navigator.dart';
+import '../lock_password/views/confirm_lock_screen_password_view.dart';
+import '../lock_password/views/set_lock_screen_password_view.dart';
 import 'bottom_nav_model.dart';
 import 'category/category_view.dart';
 import 'profile/views/profile_view.dart';
@@ -44,6 +46,10 @@ class BottomNavLayoutViewModel with ChangeNotifier {
           const TimeOffItemDetails(),
       TabNavigatorRoutes.addTimeOffRequest: (context) =>
           const AddTimeOffRequestView(),
+      TabNavigatorRoutes.setLockScreenPass: (context) =>
+          const SetLockScreenPasswordView(),
+      TabNavigatorRoutes.confirmLockScreenPass: (context) =>
+          const ConfirmLockScreenPasswordView(),
     },
   );
 

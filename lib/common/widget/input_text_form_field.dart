@@ -1,7 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import '../styles/colors.dart';
 
+import '../styles/colors.dart';
 import 'custom_text_field.dart';
+
+typedef ValidatorCallback = String? Function(String? value)?;
+typedef OnSavedCallback = void Function(String? value)?;
 
 class InputTextFormFieldWidget extends StatelessWidget {
   const InputTextFormFieldWidget({
@@ -10,6 +14,7 @@ class InputTextFormFieldWidget extends StatelessWidget {
     required this.isRequired,
     this.controller,
     this.validator,
+    this.onSaved,
     this.suffixIcon,
     this.obscureText = false,
     this.readOnly = false,
@@ -20,7 +25,8 @@ class InputTextFormFieldWidget extends StatelessWidget {
   final String labelText;
   final bool isRequired;
   final TextEditingController? controller;
-  final String? Function(String? value)? validator;
+  final ValidatorCallback validator;
+  final OnSavedCallback onSaved;
   final Widget? suffixIcon;
   final bool obscureText;
   final bool readOnly;
@@ -44,6 +50,7 @@ class InputTextFormFieldWidget extends StatelessWidget {
       maxLines: maxLines,
       keyboardType: keyboardType,
       validator: validator,
+      onSaved: onSaved,
       decoration: InputDecoration(
         label: Row(
           children: [

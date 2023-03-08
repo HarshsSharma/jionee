@@ -5,6 +5,8 @@ class TabNavigatorRoutes {
   static const String itemDetails = '/ItemDetails';
   static const String timeOffItemDetails = '/Time-Off-Item-Details';
   static const String addTimeOffRequest = '/Add-Time-Off-Item-Requests';
+  static const String setLockScreenPass = '/Set-Lock-Screen-Password';
+  static const String confirmLockScreenPass = '/Confirm-Lock-Screen-Password';
 }
 
 class TabNavigator extends StatelessWidget {
