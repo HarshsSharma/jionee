@@ -141,12 +141,14 @@ class NumberButton extends StatelessWidget {
           controller.text += number.toString();
         },
         child: Center(
-          child: Text(
-            number.toString(),
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontSize: 30,
+          child: FittedBox(
+            child: Text(
+              number.toString(),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 30,
+              ),
             ),
           ),
         ),

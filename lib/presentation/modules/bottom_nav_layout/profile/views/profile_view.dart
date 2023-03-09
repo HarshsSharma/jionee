@@ -22,7 +22,7 @@ class _ProfileViewState extends State<ProfileView> {
       appBar: AppBar(),
       body: Consumer<ModelTheme>(
         builder: (_, themeNotifier, __) {
-          return Column(
+          return ListView(
             children: [
               ListTile(
                 title: Text(
