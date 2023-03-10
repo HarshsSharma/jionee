@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:jionee/common/extensions/overlay.dart';
 
+import '../constants/constants.dart';
 import '../styles/colors.dart';
 import 'infinty_list_view.dart';
 
@@ -52,18 +54,15 @@ class _DropDownWidgetState extends State<DropDownWidget> {
 
   void showOverlay() {
     final overlay = Overlay.of(context);
-    RenderBox renderBox = context.findRenderObject() as RenderBox;
-    var size = renderBox.size;
+
     entry = OverlayEntry(
       builder: (ctx) {
         return Positioned(
-          width: size.width,
+          width: context.widgetSize.width,
           child: CompositedTransformFollower(
             link: _layerLink,
             showWhenUnlinked: false,
-            offset: fieldState.hasError
-                ? Offset(0.0, size.height - 50.0)
-                : Offset(0.0, size.height - 27.0),
+            offset: context.currentOverlayOffset(fieldState: fieldState),
             child: TapRegion(
               groupId: _globalKey,
               child: _createOverlay(fieldState),
@@ -102,7 +101,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
         horizontal: 15.0,
         vertical: 4.0,
       ),
-      height: 250,
+      height: overlayHeight,
       child: Material(
         color: Colors.transparent,
         child: Column(

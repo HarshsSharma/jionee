@@ -78,6 +78,7 @@ class _AddTimeOffRequestViewState extends State<AddTimeOffRequestView> {
                 },
               ),
               const SizedBox(height: 12.0),
+              const SizedBox(height: 300.0),
               DropDownWidget(
                 multiSelection: false,
                 data: const [
@@ -103,7 +104,7 @@ class _AddTimeOffRequestViewState extends State<AddTimeOffRequestView> {
                   return null;
                 },
               ),
-              const SizedBox(height: 12.0),
+              const SizedBox(height: 300.0),
             ],
           ),
         ),
