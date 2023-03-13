@@ -1,0 +1,1 @@
+typedef RetryCallback = void Function();

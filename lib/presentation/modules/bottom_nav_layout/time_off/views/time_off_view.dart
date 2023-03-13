@@ -34,7 +34,7 @@ class TimeOff extends StatelessWidget {
             },
             separatorBuilder: const Divider(),
             onScrollEnd: (nextPage) async {
-              await provider.getData();
+              await provider.getData(context);
             },
             initalLoaderWidget: SizedBox(
               height: MediaQuery.of(context).size.height,

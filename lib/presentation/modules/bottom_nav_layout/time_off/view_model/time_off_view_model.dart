@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jionee/common/enums/time_off.dart';
+import 'package:jionee/common/extensions/loader.dart';
 
 import '../models/time_off_model.dart';
 import '../repo/repo.dart';
@@ -72,8 +73,18 @@ class TimeOffViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getData() async {
-    List<TimeOffModel> response = await myService.getData();
-    _addNewData(response);
+  Future<void> getData(BuildContext context) async {
+    try {
+      context.showLoader();
+
+      List<TimeOffModel> response = await myService.getData();
+      if (context.mounted) {
+        Future.delayed(const Duration(seconds: 1), () => context.hideLoader());
+      }
+      _addNewData(response);
+    } catch (e) {
+      context.hideLoader();
+      context.showErrorLoader(() {});
+    }
   }
 }

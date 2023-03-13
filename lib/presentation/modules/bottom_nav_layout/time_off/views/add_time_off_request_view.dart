@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jionee/common/extensions/loader.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../common/widget/dropdown_widget.dart';
@@ -67,8 +68,18 @@ class _AddTimeOffRequestViewState extends State<AddTimeOffRequestView> {
               ),
               const SizedBox(height: 12.0),
               InputTextFormFieldWidget(
+                keyboardType: TextInputType.visiblePassword,
                 controller: viewModel.dateController,
                 isRequired: true,
+                onChanged: (value) async {
+                  if (value!.length > 3) {
+                    context.showLoader();
+                    Future.delayed(
+                      const Duration(seconds: 2),
+                      () => context.hideLoader(),
+                    );
+                  }
+                },
                 labelText: 'Date',
                 validator: (value) {
                   if (value!.isEmpty) {

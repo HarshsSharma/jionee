@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:flutter/material.dart';
 
 import '../styles/colors.dart';
@@ -15,6 +16,7 @@ class InputTextFormFieldWidget extends StatelessWidget {
     this.controller,
     this.validator,
     this.onSaved,
+    this.onChanged,
     this.suffixIcon,
     this.obscureText = false,
     this.readOnly = false,
@@ -27,6 +29,7 @@ class InputTextFormFieldWidget extends StatelessWidget {
   final TextEditingController? controller;
   final ValidatorCallback validator;
   final OnSavedCallback onSaved;
+  final OnSavedCallback onChanged;
   final Widget? suffixIcon;
   final bool obscureText;
   final bool readOnly;
@@ -40,6 +43,7 @@ class InputTextFormFieldWidget extends StatelessWidget {
       textInputAction: textInputAction,
       obscureText: obscureText,
       readOnly: readOnly,
+      onChanged: onChanged,
       backgroundColor:
           Theme.of(context).colorScheme.brightness == Brightness.dark
               ? Colors.grey[850]!

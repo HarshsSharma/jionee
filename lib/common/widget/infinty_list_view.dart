@@ -76,27 +76,18 @@ class _InfinityListViewWidgetState<T> extends State<InfinityListViewWidget<T>> {
       child: CustomScrollView(
         controller: _scrollController,
         physics: widget.physics,
-        slivers: _firstLoading
+        slivers: widget.data.isEmpty && _firstLoading
             ? [
-                SliverToBoxAdapter(
-                  child: widget.initalLoaderWidget,
+                const SliverToBoxAdapter(
+                  child: Center(
+                    child: Text('No Data!'),
+                  ),
                 ),
               ]
             : [
                 SliverList(
                   delegate: SliverChildListDelegate(
                     [
-                      if (widget.data.isEmpty) ...[
-                        if (_loadingStatus == LoadingStatus.loading) ...[
-                          const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ] else if (_loadingStatus == LoadingStatus.loaded) ...[
-                          const Center(
-                            child: Text('No Data!'),
-                          ),
-                        ],
-                      ],
                       if (widget.data.isNotEmpty) ...[
                         ListView.separated(
                           shrinkWrap: true,
@@ -106,8 +97,9 @@ class _InfinityListViewWidgetState<T> extends State<InfinityListViewWidget<T>> {
                           itemBuilder: widget.itemBuilder,
                           separatorBuilder: (_, __) => widget.separatorBuilder,
                         ),
-                        if (_loadingStatus == LoadingStatus.loading ||
-                            _loadingStatus == LoadingStatus.initial)
+                        if ((_loadingStatus == LoadingStatus.loading ||
+                                _loadingStatus == LoadingStatus.initial) &&
+                            !_firstLoading)
                           const Padding(
                             padding: EdgeInsets.only(
                               top: 10.0,
@@ -151,13 +143,13 @@ class _InfinityListViewWidgetState<T> extends State<InfinityListViewWidget<T>> {
   }
 
   Future<void> _fetchingData() async {
-    _setLoadingStatus(LoadingStatus.loading);
+    if (!_firstLoading) _setLoadingStatus(LoadingStatus.loading);
     widget.onScrollEnd(startPage).then((value) {
-      _setLoadingStatus(LoadingStatus.loaded);
+      if (!_firstLoading) _setLoadingStatus(LoadingStatus.loaded);
       preventCall = false;
       startPage++;
     }).catchError((error) {
-      _setLoadingStatus(LoadingStatus.failure);
+      if (!_firstLoading) _setLoadingStatus(LoadingStatus.failure);
       preventCall = true;
     });
   }
@@ -171,6 +163,6 @@ class _InfinityListViewWidgetState<T> extends State<InfinityListViewWidget<T>> {
   }
 
   void _setFirstLoading(bool value) => setState(() {
-        _firstLoading = value;
-      });
+     _firstLoading = value;
+  });
 }

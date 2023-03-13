@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-typedef RetryCallback = void Function();
+import '../../../../common/constants/typedefs.dart';
+
 
 class NoInternetView extends StatelessWidget {
   final RetryCallback retryCallback;
