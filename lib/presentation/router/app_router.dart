@@ -5,6 +5,7 @@ import '../../common/constants/constants.dart';
 import '../../di.dart';
 import '../../main.dart';
 import '../modules/bottom_nav_layout/bottom_nav_layot_view.dart';
+import '../modules/bottom_nav_layout/search/view_model/movies_view_model.dart';
 import '../modules/bottom_nav_layout/time_off/view_model/time_off_view_model.dart';
 import '../modules/lock_password/views/lock_view.dart';
 
@@ -21,21 +22,9 @@ class AppRouter {
             ? MaterialPageRoute(
                 builder: (context) => const LockView(),
               )
-            : MaterialPageRoute(
-                builder: (_) => ChangeNotifierProvider(
-                  create: (_) => sl<TimeOffViewModel>(),
-                  lazy: true,
-                  child: const BottomNavLayoutView(),
-                ),
-              );
+            : _bottomNavPageRoute();
       case AppRouterNames.bottomNavLayout:
-        return MaterialPageRoute(
-          builder: (_) => ChangeNotifierProvider(
-            create: (_) => sl<TimeOffViewModel>(),
-            lazy: true,
-            child: const BottomNavLayoutView(),
-          ),
-        );
+        return _bottomNavPageRoute();
       default:
         return MaterialPageRoute(
           builder: (context) => Scaffold(
@@ -46,5 +35,25 @@ class AppRouter {
           ),
         );
     }
+  }
+
+  MaterialPageRoute _bottomNavPageRoute() {
+    return MaterialPageRoute(
+      builder: (context) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => sl<TimeOffViewModel>(),
+              lazy: true,
+            ),
+            ChangeNotifierProvider(
+              create: (_) => sl<MoviesViewModel>(),
+              lazy: true,
+            ),
+          ],
+          child: const BottomNavLayoutView(),
+        );
+      },
+    );
   }
 }

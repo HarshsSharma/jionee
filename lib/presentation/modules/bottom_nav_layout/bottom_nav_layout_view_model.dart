@@ -7,7 +7,7 @@ import '../lock_password/views/set_lock_screen_password_view.dart';
 import 'bottom_nav_model.dart';
 import 'category/category_view.dart';
 import 'profile/views/profile_view.dart';
-import 'search/search_view.dart';
+import 'search/view/search_view.dart';
 import 'time_off/views/add_time_off_request_view.dart';
 import 'time_off/views/time_off_item_details_view.dart';
 import 'time_off/views/time_off_view.dart';

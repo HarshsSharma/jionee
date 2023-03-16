@@ -19,6 +19,9 @@ class TimeOff extends StatelessWidget {
       body: Consumer<TimeOffViewModel>(
         builder: (_, provider, __) {
           return InfinityListViewWidget<TimeOffModel>(
+            loadData: (_) async {
+              await provider.getData(context);
+            },
             data: provider.data,
             itemBuilder: (ctx, i) {
               return TimeOffItemBuilder(

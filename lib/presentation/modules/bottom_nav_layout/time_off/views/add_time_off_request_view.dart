@@ -56,7 +56,7 @@ class _AddTimeOffRequestViewState extends State<AddTimeOffRequestView> {
                 loadData: () async {
                   return;
                 },
-                onScrollEnd: (_) async {
+                onScrollEnd: (_, __) async {
                   return;
                 },
                 validator: (value) {
@@ -68,17 +68,17 @@ class _AddTimeOffRequestViewState extends State<AddTimeOffRequestView> {
               ),
               const SizedBox(height: 12.0),
               InputTextFormFieldWidget(
-                keyboardType: TextInputType.visiblePassword,
+                keyboardType:
+                    Provider.of<TimeOffViewModel>(context).dataKeyboradType,
                 controller: viewModel.dateController,
                 isRequired: true,
                 onChanged: (value) async {
-                  if (value!.length > 3) {
-                    context.showLoader();
-                    Future.delayed(
-                      const Duration(seconds: 2),
-                      () => context.hideLoader(),
-                    );
-                  }
+                  viewModel.changeDataKeyboardType(value!);
+                  context.showLoader();
+                  Future.delayed(
+                    const Duration(seconds: 2),
+                    () => context.hideLoader(),
+                  );
                 },
                 labelText: 'Date',
                 validator: (value) {
@@ -105,7 +105,7 @@ class _AddTimeOffRequestViewState extends State<AddTimeOffRequestView> {
                 loadData: () async {
                   return;
                 },
-                onScrollEnd: (_) async {
+                onScrollEnd: (_, __) async {
                   return;
                 },
                 validator: (value) {

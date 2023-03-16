@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+
+import '../constants/typedefs.dart';
 
 class InfinityListViewWidget<T> extends StatefulWidget {
   const InfinityListViewWidget({
@@ -11,9 +15,10 @@ class InfinityListViewWidget<T> extends StatefulWidget {
     this.scrollController,
     this.isEnd = false,
     this.focusNode,
+    this.initalLoaderWidget = const Center(child: CircularProgressIndicator()),
     this.startPage = 1,
     required this.onScrollEnd,
-    this.initalLoaderWidget = const Center(child: CircularProgressIndicator()),
+    required this.loadData,
   }) : super(key: key);
 
   final List<T> data;
@@ -26,7 +31,8 @@ class InfinityListViewWidget<T> extends StatefulWidget {
   final FocusNode? focusNode;
   final Widget initalLoaderWidget;
   final int startPage;
-  final Future<void> Function(int nextPage) onScrollEnd;
+  final OnScrollEndCallback onScrollEnd;
+  final OnScrollEndCallback loadData;
 
   @override
   State<InfinityListViewWidget<T>> createState() =>
@@ -53,7 +59,7 @@ class _InfinityListViewWidgetState<T> extends State<InfinityListViewWidget<T>> {
     startPage = widget.startPage;
     if (startPage == widget.startPage) {
       _setFirstLoading(true);
-      _fetchingData().then((value) {
+      _fetchingFirstData().then((value) {
         _setFirstLoading(false);
       });
     }
@@ -62,6 +68,7 @@ class _InfinityListViewWidgetState<T> extends State<InfinityListViewWidget<T>> {
 
   @override
   Widget build(BuildContext context) {
+    log('InfinityListViewWidget rebuild and data length is: ${widget.data.length}');
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification is ScrollEndNotification &&
@@ -154,6 +161,18 @@ class _InfinityListViewWidgetState<T> extends State<InfinityListViewWidget<T>> {
     });
   }
 
+  Future<void> _fetchingFirstData() async {
+    if (!_firstLoading) _setLoadingStatus(LoadingStatus.loading);
+    widget.loadData(startPage).then((value) {
+      if (!_firstLoading) _setLoadingStatus(LoadingStatus.loaded);
+      preventCall = false;
+      startPage++;
+    }).catchError((error) {
+      if (!_firstLoading) _setLoadingStatus(LoadingStatus.failure);
+      preventCall = true;
+    });
+  }
+
   void _setLoadingStatus(LoadingStatus value) {
     if (startPage != widget.startPage) {
       setState(() {
@@ -163,6 +182,6 @@ class _InfinityListViewWidgetState<T> extends State<InfinityListViewWidget<T>> {
   }
 
   void _setFirstLoading(bool value) => setState(() {
-     _firstLoading = value;
-  });
+        _firstLoading = value;
+      });
 }

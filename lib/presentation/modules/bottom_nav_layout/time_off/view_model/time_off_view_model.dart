@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:jionee/common/enums/time_off.dart';
 import 'package:jionee/common/extensions/loader.dart';
+import 'package:jionee/common/extensions/strings.dart';
 
 import '../models/time_off_model.dart';
 import '../repo/repo.dart';
@@ -10,9 +13,11 @@ class TimeOffViewModel with ChangeNotifier {
   TimeOffViewModel(this.myService);
   final List<TimeOffModel> _data = [];
   TimeOffModel? _selectedRequest;
+  TextInputType _dataKeyboradType = TextInputType.text;
 
   List<TimeOffModel> get data => _data;
   TimeOffModel get selectedRequest => _selectedRequest!;
+  TextInputType get dataKeyboradType => _dataKeyboradType;
 
   TextEditingController typeController = TextEditingController();
   TextEditingController dayPartController = TextEditingController();
@@ -46,6 +51,24 @@ class TimeOffViewModel with ChangeNotifier {
     dateController.dispose();
     dayPartController.dispose();
     requestMessageController.dispose();
+  }
+
+  void changeDataKeyboardType(String text) {
+    if (text.isNotEmpty) {
+      if (text.lastChar().isNumeric()) {
+        _changeDataKeyboardType(TextInputType.phone);
+      } else {
+        _changeDataKeyboardType(TextInputType.text);
+      }
+    } else {
+      _changeDataKeyboardType(TextInputType.text);
+    }
+  }
+
+  void _changeDataKeyboardType(TextInputType inputType) {
+    log('TextInputType: $inputType');
+    _dataKeyboradType = inputType;
+    notifyListeners();
   }
 
   void setSelectedRequest(TimeOffModel request) {

@@ -1,10 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:jionee/common/extensions/overlay.dart';
 
 import '../constants/constants.dart';
+import '../constants/typedefs.dart';
 import '../styles/colors.dart';
 import 'infinty_list_view.dart';
+
+typedef OnSavedFutureCallback = Future<void> Function(String? value)?;
 
 class DropDownWidget extends StatefulWidget {
   const DropDownWidget({
@@ -13,6 +19,8 @@ class DropDownWidget extends StatefulWidget {
     required this.data,
     required this.multiSelection,
     required this.isRequired,
+    this.onChanged,
+    this.onSubmitKeyboard,
     required this.labelText,
     this.scrollController,
     required this.onScrollEnd,
@@ -24,9 +32,11 @@ class DropDownWidget extends StatefulWidget {
   final List<String> data;
   final bool multiSelection;
   final bool isRequired;
+  final OnSavedFutureCallback onChanged;
+  final OnSavedFutureCallback onSubmitKeyboard;
   final String labelText;
   final ScrollController? scrollController;
-  final Future<void> Function(int nextPage) onScrollEnd;
+  final OnScrollEndCallbackWithText onScrollEnd;
   final AsyncCallback loadData;
   final ValueChanged<String?>? onSingleSelection;
   final ValueChanged<List<String>>? onMultiSelection;
@@ -37,8 +47,11 @@ class DropDownWidget extends StatefulWidget {
 
 class _DropDownWidgetState extends State<DropDownWidget> {
   late ScrollController scrollController;
+  late TextEditingController _controller;
   late FormFieldState<Object> fieldState;
+  final ValueNotifier<List<String>> _data = ValueNotifier<List<String>>([]);
   bool _expanded = false;
+  int nextPage = 1;
   late GlobalKey _globalKey;
   OverlayEntry? entry;
   final LayerLink _layerLink = LayerLink();
@@ -48,15 +61,19 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   @override
   void initState() {
     scrollController = widget.scrollController ?? ScrollController();
+    _controller = TextEditingController();
+    _data.value = widget.data;
     _globalKey = GlobalKey();
     super.initState();
   }
 
-  void showOverlay() {
+  void showOverlay([bool? isNewEntry]) {
     final overlay = Overlay.of(context);
-
     entry = OverlayEntry(
+      // maintainState: true,
       builder: (ctx) {
+        log('OverlayEntry from DropDown Builder');
+        log('OverlayEntry from DropDown data length -> ${widget.data.length}');
         return Positioned(
           width: context.widgetSize.width,
           child: CompositedTransformFollower(
@@ -65,13 +82,32 @@ class _DropDownWidgetState extends State<DropDownWidget> {
             offset: context.currentOverlayOffset(fieldState: fieldState),
             child: TapRegion(
               groupId: _globalKey,
-              child: _createOverlay(fieldState),
+              child: ValueListenableBuilder<List<String>>(
+                  valueListenable: _data,
+                  builder: (context, value, _) {
+                    log('From ValueListenableBuilder data length: ${value.length}');
+                    return OverlayBuilder(
+                      controller: _controller,
+                      isNewEntry: isNewEntry,
+                      entr: entry!,
+                      data: value,
+                      handleSelectedEvent: (title) {
+                        _handleSelectedEvent(title, fieldState);
+                      },
+                      onChanged: widget.onChanged,
+                      onSubmit: widget.onSubmitKeyboard,
+                      onScrollEnd: widget.onScrollEnd,
+                      scrollController: scrollController,
+                      selectedTitle: _selectedTitle,
+                      selectedTitles: _selectedTitles,
+                      field: fieldState,
+                    );
+                  }),
             ),
           ),
         );
       },
     );
-
     overlay.insert(entry!);
   }
 
@@ -80,91 +116,30 @@ class _DropDownWidgetState extends State<DropDownWidget> {
     entry = null;
   }
 
-  Widget _createOverlay([FormFieldState<Object>? field]) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(3),
-          bottomRight: Radius.circular(3),
-        ),
-        border: Border.all(
-          color: field!.hasError
-              ? Theme.of(context).colorScheme.error
-              : AppColors.boDarkGrey,
-          width: 1.0,
-        ),
-        color: Theme.of(context).colorScheme.brightness == Brightness.dark
-            ? Colors.grey[850]!
-            : Colors.white,
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 15.0,
-        vertical: 4.0,
-      ),
-      height: overlayHeight,
-      child: Material(
-        color: Colors.transparent,
-        child: Column(
-          children: [
-            const SizedBox(height: 10.0),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                helperStyle: Theme.of(context)
-                    .textTheme
-                    .labelSmall!
-                    .copyWith(color: AppColors.tLightGrey),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 5,
-                  horizontal: 10.0,
-                ),
-                prefixIcon: const Icon(Icons.search),
-                border: _textFieldBorders(),
-                enabledBorder: _textFieldBorders(),
-                focusedBorder: _textFieldBorders(),
-                disabledBorder: _textFieldBorders(),
-              ),
-            ),
-            Expanded(
-              child: RawScrollbar(
-                radius: const Radius.circular(4),
-                thumbVisibility: true,
-                controller: scrollController,
-                child: InfinityListViewWidget<String>(
-                  // focusNode: _focusNode,
-                  scrollController: scrollController,
-                  data: widget.data,
-                  separatorBuilder: const SizedBox(height: 10.0),
-                  itemBuilder: (ctx, i) {
-                    final title = widget.data[i];
-                    return GestureDetector(
-                      onTap: () {
-                        _handleSelectedEvent(title, field);
-                      },
-                      child: Text(
-                        title,
-                        style: _selectedTitle == title ||
-                                _selectedTitles.contains(title)
-                            ? Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .copyWith(color: Colors.grey)
-                            : Theme.of(context).textTheme.labelMedium,
-                      ),
-                    );
-                  },
-                  onScrollEnd: (nextPage) => widget.onScrollEnd(nextPage),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant DropDownWidget oldWidget) {
+    if (_expanded && widget.data.isNotEmpty) {
+      log('From didUpdateWidget old:${oldWidget.data.length} -> current ${widget.data.length}');
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {
+          _data.value = widget.data;
+        });
+        // hideOverlay();
+        // showOverlay();
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
+    log('DropDown data length -> ${widget.data.length}');
     return TapRegion(
       /// Through this [onTapOutside] prop I can close the dropdown menu when tapping any where outside it
       onTapOutside: (event) {
@@ -269,15 +244,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
     );
   }
 
-  OutlineInputBorder _textFieldBorders() {
-    return const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(3.0)),
-      borderSide: BorderSide(
-        color: AppColors.boTextFieldGrey,
-      ),
-    );
-  }
-
   Text _labetWidget() {
     return Text(
       'Select',
@@ -288,10 +254,14 @@ class _DropDownWidgetState extends State<DropDownWidget> {
     );
   }
 
-  Text _singleSelectionItem() {
-    return Text(_selectedTitle,
+  Flexible _singleSelectionItem() {
+    return Flexible(
+      child: Text(
+        _selectedTitle,
         overflow: TextOverflow.ellipsis,
-        style: Theme.of(context).textTheme.labelMedium);
+        style: Theme.of(context).textTheme.labelMedium,
+      ),
+    );
   }
 
   Expanded _multiSelectionItem(FormFieldState<dynamic> field) {
@@ -388,29 +358,13 @@ class _DropDownWidgetState extends State<DropDownWidget> {
     });
   }
 
-  Future _showDialog() {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-
   void _handleButtonPressed() {
     if (!_expanded) {
-      _showDialog();
-
       widget.loadData().then(
         (value) {
-          _dismissDialog(context);
           _buttonHandlePressed();
         },
-      ).catchError((error) {
-        _dismissDialog(context);
-        _showErrorDialog();
-      });
+      );
     } else {
       _buttonHandlePressed();
     }
@@ -429,28 +383,168 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       showOverlay();
     }
   }
+}
 
-  Future _showErrorDialog() {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Something went wrong'),
-        content: const Text(
-            'Something happend while loading the data, please try again'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              _dismissDialog(context);
-            },
-            child: const Text('ok'),
-          ),
-        ],
+class OverlayBuilder extends StatefulWidget {
+  final FormFieldState? field;
+  final List<String> data;
+  final OnSavedFutureCallback onChanged;
+  final TextEditingController controller;
+  final OnSavedFutureCallback onSubmit;
+  final OverlayEntry entr;
+  final bool? isNewEntry;
+  final void Function(String title) handleSelectedEvent;
+  final OnScrollEndCallbackWithText onScrollEnd;
+  final String selectedTitle;
+  final List<String> selectedTitles;
+  final ScrollController scrollController;
+  const OverlayBuilder({
+    Key? key,
+    this.field,
+    required this.data,
+    required this.onChanged,
+    required this.controller,
+    required this.onSubmit,
+    required this.entr,
+    this.isNewEntry,
+    required this.handleSelectedEvent,
+    required this.onScrollEnd,
+    required this.selectedTitle,
+    required this.selectedTitles,
+    required this.scrollController,
+  }) : super(key: key);
+
+  @override
+  State<OverlayBuilder> createState() => _OverlayBuilderState();
+}
+
+class _OverlayBuilderState extends State<OverlayBuilder> {
+  @override
+  Widget build(BuildContext context) {
+    log('OverlayBuilder and data length -> ${widget.data.length}');
+    log('OverlayBuilder isNewEntry: -> ${widget.isNewEntry}');
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(3),
+          bottomRight: Radius.circular(3),
+        ),
+        border: Border.all(
+          color: widget.field!.hasError
+              ? Theme.of(context).colorScheme.error
+              : AppColors.boDarkGrey,
+          width: 1.0,
+        ),
+        color: Theme.of(context).colorScheme.brightness == Brightness.dark
+            ? Colors.grey[850]!
+            : Colors.white,
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+        vertical: 4.0,
+      ),
+      height: overlayHeight,
+      child: Material(
+        color: Colors.transparent,
+        child: Column(
+          children: [
+            const SizedBox(height: 10.0),
+            TextField(
+              controller: widget.controller,
+              onSubmitted: (va) {
+                widget.entr.markNeedsBuild();
+                if (widget.onSubmit != null) {
+                  log('onSubmitted from TextFormField');
+                  widget.onSubmit!(va);
+                }
+              },
+              onChanged: (va) {
+                log('onChanged from TextFormField');
+                // if (widget.onChanged != null) {
+                //   setState(() {
+                //     widget.onChanged!(va);
+                //   });
+                // }
+              },
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                helperStyle: Theme.of(context)
+                    .textTheme
+                    .labelSmall!
+                    .copyWith(color: AppColors.tLightGrey),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 5,
+                  horizontal: 10.0,
+                ),
+                prefixIcon: const Icon(Icons.search),
+                border: _textFieldBorders(),
+                enabledBorder: _textFieldBorders(),
+                focusedBorder: _textFieldBorders(),
+                disabledBorder: _textFieldBorders(),
+              ),
+            ),
+            Expanded(
+              child:
+                  //  _controller.text.isEmpty && widget.data.isNotEmpty
+                  //     ? const SizedBox(
+                  //         child: Center(
+                  //           child: Text(
+                  //             'Enter title',
+                  //           ),
+                  //         ),
+                  //       )
+                  //     :
+                  RawScrollbar(
+                radius: const Radius.circular(4),
+                thumbVisibility: true,
+                controller: widget.scrollController,
+                child: InfinityListViewWidget<String>(
+                  scrollController: widget.scrollController,
+                  data: widget.data,
+                  loadData: (_) async {
+                    return;
+                  },
+                  separatorBuilder: const SizedBox(height: 10.0),
+                  itemBuilder: (ctx, i) {
+                    final title = widget.data[i];
+                    return GestureDetector(
+                      onTap: () {
+                        widget.handleSelectedEvent(title);
+                      },
+                      child: Text(
+                        title,
+                        style: widget.selectedTitle == title ||
+                                widget.selectedTitles.contains(title)
+                            ? Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(color: Colors.grey)
+                            : Theme.of(context).textTheme.labelMedium,
+                      ),
+                    );
+                  },
+                  onScrollEnd: (nextPage) async {
+                    widget.onScrollEnd(
+                      nextPage,
+                      widget.controller.text,
+                    );
+                    if (widget.isNewEntry != null) {}
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void _dismissDialog(BuildContext context) {
-    Navigator.of(context, rootNavigator: true).pop(true);
+  OutlineInputBorder _textFieldBorders() {
+    return const OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(3.0)),
+      borderSide: BorderSide(
+        color: AppColors.boTextFieldGrey,
+      ),
+    );
   }
 }
