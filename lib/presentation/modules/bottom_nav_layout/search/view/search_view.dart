@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../common/widget/dropdown_widget.dart';
@@ -51,7 +49,6 @@ class _SearchViewState extends State<SearchView> {
               // Draggable(child: child, feedback: feedback)
               Consumer<MoviesViewModel>(
                 builder: (context, provider, _) {
-                  log('From SearchView Consumer data lenght: ${provider.data.length}');
                   return DropDownWidget(
                     data: provider.data.map((e) => e.title!).toList(),
                     isRequired: true,
@@ -64,7 +61,6 @@ class _SearchViewState extends State<SearchView> {
                     },
                     multiSelection: false,
                     onScrollEnd: (nextPage, text) {
-                      log('SearchView from onScrollEnd');
                       provider.getMovies(
                         page: nextPage,
                         context: context,

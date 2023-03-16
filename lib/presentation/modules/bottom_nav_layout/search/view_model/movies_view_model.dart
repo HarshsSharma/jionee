@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:jionee/common/extensions/loader.dart';
 import '../model/movies_model.dart';
@@ -36,7 +34,6 @@ class MoviesViewModel extends ChangeNotifier {
       _totalPages = response.totalPages!;
       _data.addAll(response.results!);
       notifyListeners();
-      log('Data lenght: ${_data.length}\nPage number: $page\nMovie name: $name\nTotal pages: $_totalPages');
     } catch (e) {
       rethrow;
     }

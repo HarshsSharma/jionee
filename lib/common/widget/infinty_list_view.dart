@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import '../constants/typedefs.dart';
@@ -68,7 +66,6 @@ class _InfinityListViewWidgetState<T> extends State<InfinityListViewWidget<T>> {
 
   @override
   Widget build(BuildContext context) {
-    log('InfinityListViewWidget rebuild and data length is: ${widget.data.length}');
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification is ScrollEndNotification &&

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +49,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   late FormFieldState<Object> fieldState;
   final ValueNotifier<List<String>> _data = ValueNotifier<List<String>>([]);
   bool _expanded = false;
-  int nextPage = 1;
   late GlobalKey _globalKey;
   OverlayEntry? entry;
   final LayerLink _layerLink = LayerLink();
@@ -67,13 +64,11 @@ class _DropDownWidgetState extends State<DropDownWidget> {
     super.initState();
   }
 
-  void showOverlay([bool? isNewEntry]) {
+  void showOverlay() {
     final overlay = Overlay.of(context);
     entry = OverlayEntry(
       // maintainState: true,
       builder: (ctx) {
-        log('OverlayEntry from DropDown Builder');
-        log('OverlayEntry from DropDown data length -> ${widget.data.length}');
         return Positioned(
           width: context.widgetSize.width,
           child: CompositedTransformFollower(
@@ -85,11 +80,8 @@ class _DropDownWidgetState extends State<DropDownWidget> {
               child: ValueListenableBuilder<List<String>>(
                   valueListenable: _data,
                   builder: (context, value, _) {
-                    log('From ValueListenableBuilder data length: ${value.length}');
                     return OverlayBuilder(
                       controller: _controller,
-                      isNewEntry: isNewEntry,
-                      entr: entry!,
                       data: value,
                       handleSelectedEvent: (title) {
                         _handleSelectedEvent(title, fieldState);
@@ -125,13 +117,10 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   @override
   void didUpdateWidget(covariant DropDownWidget oldWidget) {
     if (_expanded && widget.data.isNotEmpty) {
-      log('From didUpdateWidget old:${oldWidget.data.length} -> current ${widget.data.length}');
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         setState(() {
           _data.value = widget.data;
         });
-        // hideOverlay();
-        // showOverlay();
       });
     }
     super.didUpdateWidget(oldWidget);
@@ -139,7 +128,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
 
   @override
   Widget build(BuildContext context) {
-    log('DropDown data length -> ${widget.data.length}');
     return TapRegion(
       /// Through this [onTapOutside] prop I can close the dropdown menu when tapping any where outside it
       onTapOutside: (event) {
@@ -391,8 +379,6 @@ class OverlayBuilder extends StatefulWidget {
   final OnSavedFutureCallback onChanged;
   final TextEditingController controller;
   final OnSavedFutureCallback onSubmit;
-  final OverlayEntry entr;
-  final bool? isNewEntry;
   final void Function(String title) handleSelectedEvent;
   final OnScrollEndCallbackWithText onScrollEnd;
   final String selectedTitle;
@@ -405,8 +391,6 @@ class OverlayBuilder extends StatefulWidget {
     required this.onChanged,
     required this.controller,
     required this.onSubmit,
-    required this.entr,
-    this.isNewEntry,
     required this.handleSelectedEvent,
     required this.onScrollEnd,
     required this.selectedTitle,
@@ -421,8 +405,6 @@ class OverlayBuilder extends StatefulWidget {
 class _OverlayBuilderState extends State<OverlayBuilder> {
   @override
   Widget build(BuildContext context) {
-    log('OverlayBuilder and data length -> ${widget.data.length}');
-    log('OverlayBuilder isNewEntry: -> ${widget.isNewEntry}');
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
@@ -452,19 +434,14 @@ class _OverlayBuilderState extends State<OverlayBuilder> {
             TextField(
               controller: widget.controller,
               onSubmitted: (va) {
-                widget.entr.markNeedsBuild();
                 if (widget.onSubmit != null) {
-                  log('onSubmitted from TextFormField');
                   widget.onSubmit!(va);
                 }
               },
               onChanged: (va) {
-                log('onChanged from TextFormField');
-                // if (widget.onChanged != null) {
-                //   setState(() {
-                //     widget.onChanged!(va);
-                //   });
-                // }
+                if (widget.onChanged != null) {
+                  widget.onChanged!(va);
+                }
               },
               decoration: InputDecoration(
                 hintText: 'Search...',
@@ -484,54 +461,51 @@ class _OverlayBuilderState extends State<OverlayBuilder> {
               ),
             ),
             Expanded(
-              child:
-                  //  _controller.text.isEmpty && widget.data.isNotEmpty
-                  //     ? const SizedBox(
-                  //         child: Center(
-                  //           child: Text(
-                  //             'Enter title',
-                  //           ),
-                  //         ),
-                  //       )
-                  //     :
-                  RawScrollbar(
-                radius: const Radius.circular(4),
-                thumbVisibility: true,
-                controller: widget.scrollController,
-                child: InfinityListViewWidget<String>(
-                  scrollController: widget.scrollController,
-                  data: widget.data,
-                  loadData: (_) async {
-                    return;
-                  },
-                  separatorBuilder: const SizedBox(height: 10.0),
-                  itemBuilder: (ctx, i) {
-                    final title = widget.data[i];
-                    return GestureDetector(
-                      onTap: () {
-                        widget.handleSelectedEvent(title);
-                      },
-                      child: Text(
-                        title,
-                        style: widget.selectedTitle == title ||
-                                widget.selectedTitles.contains(title)
-                            ? Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .copyWith(color: Colors.grey)
-                            : Theme.of(context).textTheme.labelMedium,
+              child: widget.controller.text.isEmpty && widget.data.isEmpty
+                  ? const SizedBox(
+                      child: Center(
+                        child: Text(
+                          'Enter title',
+                        ),
                       ),
-                    );
-                  },
-                  onScrollEnd: (nextPage) async {
-                    widget.onScrollEnd(
-                      nextPage,
-                      widget.controller.text,
-                    );
-                    if (widget.isNewEntry != null) {}
-                  },
-                ),
-              ),
+                    )
+                  : RawScrollbar(
+                      radius: const Radius.circular(4),
+                      thumbVisibility: true,
+                      controller: widget.scrollController,
+                      child: InfinityListViewWidget<String>(
+                        scrollController: widget.scrollController,
+                        data: widget.data,
+                        loadData: (_) async {
+                          return;
+                        },
+                        separatorBuilder: const SizedBox(height: 10.0),
+                        itemBuilder: (ctx, i) {
+                          final title = widget.data[i];
+                          return GestureDetector(
+                            onTap: () {
+                              widget.handleSelectedEvent(title);
+                            },
+                            child: Text(
+                              title,
+                              style: widget.selectedTitle == title ||
+                                      widget.selectedTitles.contains(title)
+                                  ? Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(color: Colors.grey)
+                                  : Theme.of(context).textTheme.labelMedium,
+                            ),
+                          );
+                        },
+                        onScrollEnd: (nextPage) async {
+                          widget.onScrollEnd(
+                            nextPage,
+                            widget.controller.text,
+                          );
+                        },
+                      ),
+                    ),
             ),
           ],
         ),

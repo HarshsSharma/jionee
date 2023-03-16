@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import '../constants/typedefs.dart';
 import '../widget/dialog.dart';
@@ -9,7 +7,6 @@ const Color _backgroundColor = Colors.transparent;
 extension LoaderIndicatorExtension on BuildContext {
   Future<void> showLoader() async {
     Future.delayed(Duration.zero, () {
-      log('In show loader');
       showDialog(
         barrierDismissible: false,
         context: this,
@@ -51,8 +48,6 @@ extension LoaderIndicatorExtension on BuildContext {
   }
 
   void hideLoader() {
-    log('hideLoader');
-
     Navigator.of(this, rootNavigator: true).pop(true);
   }
 }
