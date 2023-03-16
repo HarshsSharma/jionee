@@ -131,10 +131,17 @@ class _DropDownWidgetState extends State<DropDownWidget> {
     return TapRegion(
       /// Through this [onTapOutside] prop I can close the dropdown menu when tapping any where outside it
       onTapOutside: (event) {
-        setState(() {
-          _expanded = false;
-        });
-        hideOverlay();
+        // This condition is important to prevent unnecessary rebuild for unexpanded
+        // dropdowns, without this condition lets say if we have 50 dropdown widgets
+        // in our screen and they all unexpanded when i tapping outside all of them
+        // it will cause a rebuild for all 50 dropdown widgets, so this condition prevent
+        // this
+        if (_expanded) {
+          setState(() {
+            _expanded = false;
+          });
+          hideOverlay();
+        }
       },
       groupId: _globalKey,
 
