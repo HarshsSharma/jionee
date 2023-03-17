@@ -5,7 +5,9 @@ import '../../router/tab_navigator.dart';
 import '../lock_password/views/confirm_lock_screen_password_view.dart';
 import '../lock_password/views/set_lock_screen_password_view.dart';
 import 'bottom_nav_model.dart';
-import 'category/category_view.dart';
+import 'evaluation/view/employees_evaluation_view.dart';
+import 'evaluation/view/evaluation_plan_view.dart';
+import 'evaluation/view/evaluation_view.dart';
 import 'profile/views/profile_view.dart';
 import 'search/view/search_view.dart';
 import 'time_off/views/add_time_off_request_view.dart';
@@ -32,7 +34,7 @@ class BottomNavLayoutViewModel with ChangeNotifier {
         tabItem: TabItem.category,
         icon: Icons.category,
         navigatorKey: GlobalKey<NavigatorState>(),
-        mainScreen: const CategoryView(),
+        mainScreen: const EvaluationView(),
       ),
       BottomNavModel(
         tabItem: TabItem.profile,
@@ -50,6 +52,10 @@ class BottomNavLayoutViewModel with ChangeNotifier {
           const SetLockScreenPasswordView(),
       TabNavigatorRoutes.confirmLockScreenPass: (context) =>
           const ConfirmLockScreenPasswordView(),
+      TabNavigatorRoutes.evaluationPlan: (context) =>
+          const EvaluationPlanView(),
+      TabNavigatorRoutes.employeesEvaluation: (context) =>
+          const EmployeesEvaluationView(),
     },
   );
 

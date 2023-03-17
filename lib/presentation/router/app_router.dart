@@ -5,6 +5,7 @@ import '../../common/constants/constants.dart';
 import '../../di.dart';
 import '../../main.dart';
 import '../modules/bottom_nav_layout/bottom_nav_layot_view.dart';
+import '../modules/bottom_nav_layout/evaluation/view_model/evaluation_view_model.dart';
 import '../modules/bottom_nav_layout/search/view_model/movies_view_model.dart';
 import '../modules/bottom_nav_layout/time_off/view_model/time_off_view_model.dart';
 import '../modules/lock_password/views/lock_view.dart';
@@ -48,6 +49,10 @@ class AppRouter {
             ),
             ChangeNotifierProvider(
               create: (_) => sl<MoviesViewModel>(),
+              lazy: true,
+            ),
+            ChangeNotifierProvider(
+              create: (_) => EvaluationsViewModel(),
               lazy: true,
             ),
           ],

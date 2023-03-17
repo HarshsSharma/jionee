@@ -7,6 +7,8 @@ class TabNavigatorRoutes {
   static const String addTimeOffRequest = '/Add-Time-Off-Item-Requests';
   static const String setLockScreenPass = '/Set-Lock-Screen-Password';
   static const String confirmLockScreenPass = '/Confirm-Lock-Screen-Password';
+  static const String evaluationPlan = '/evaluation-plan-view';
+  static const String employeesEvaluation = '/Employees-Evaluation-view';
 }
 
 class TabNavigator extends StatelessWidget {

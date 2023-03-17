@@ -137,3 +137,32 @@ TextStyle _labelSmall(Color color) =>
 
 TextStyle _labelMedium(Color color) =>
     _getTextStyle(fontSize: 14.0, color: color);
+
+Color textThemeColor(BuildContext context) =>
+    Theme.of(context).colorScheme.brightness == Brightness.dark
+        ? Colors.white
+        : AppColors.tBlack;
+
+TextStyle evSubTitle() => _getTextStyle(
+      fontSize: 14.0,
+      color: AppColors.tDarkGrey2,
+      fontWeight: FontWeight.w400,
+    );
+
+TextStyle evTitle(BuildContext context) => _getTextStyle(
+      fontSize: 16.0,
+      color: textThemeColor(context),
+      fontWeight: FontWeight.w600,
+    );
+
+TextStyle evRegularTitle(BuildContext context) => _getTextStyle(
+      fontSize: 16.0,
+      color: textThemeColor(context),
+      fontWeight: FontWeight.w400,
+    );
+
+TextStyle evHintTitle(BuildContext context) => _getTextStyle(
+      fontSize: 14.0,
+      color: textThemeColor(context),
+      fontWeight: FontWeight.w600,
+    );
